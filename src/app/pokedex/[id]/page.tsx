@@ -1,28 +1,73 @@
 'use client'
 import { useEffect, useState } from "react";
-import Image from "next/image";
-import type { PokeDex } from "@/type/pokedex";
+import { useParams } from "next/navigation";
+import { ChartOptionProps } from "@/type/visualization";
 import { Layout, RadarChart } from "@/component";
-import radarChartOptions from "@/component/visualization/data_radar.json";
 
-const limit = 20;
+const baseOptions = {
+    series: [
+        {
+            name: "",
+            data: []
+        }
+    ],
+    chart: {
+        height: 350,
+        type: "radar",
+        dropShadow: {
+            enabled: true,
+            blur: 1,
+            left: 1,
+            top: 1
+        }
+    },
+    title: { text: "" },
+    stroke: { width: 2 },
+    fill: { opacity: 0.1 },
+    markers: { size: 0 },
+    yaxis: { stepSize: 30 },
+    xaxis: {
+        categories: ["H", "A", "B", "S", "D", "C"]
+    }
+};
 
 export default function Page() {
-    const [offset, setOffset] = useState(0);
-    const [list, setList] = useState<PokeDex[]>([]);
+    const [radarChartOptions, setRadarChartOptions] = useState<ChartOptionProps | null>(null);
+    const params = useParams<{ id: string }>();
+    const id = params.id;
+
     useEffect(() => {
         (async () => {
-            const r = await fetch(`https://pokeapi.co/api/v2/pokemon/?limit=${limit}&offset=${offset}`)
+            const r = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
             if (r.status === 200) {
                 const d = await r.json();
-                setList(d.results.map((item: any, index: number) => {
-                    const id = (limit * offset) + (index + 1);
-                    return {
-                        id: id,
-                        name: item.name,
-                        thumbnailUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${id}.gif`,
-                        url: item.urlm
+                const stat: Array<number> = Array(6);
+                d.stats.map((s: any) => {
+                    switch (s.stat.name) {
+                        case "hp":
+                            stat[0] = s.base_stat;
+                            break;
+                        case "attack":
+                            stat[1] = s.base_stat;
+                            break;
+                        case "defense":
+                            stat[2] = s.base_stat;
+                            break;
+                        case "speed":
+                            stat[3] = s.base_stat;
+                            break;
+                        case "special-defense":
+                            stat[4] = s.base_stat;
+                            break;
+                        case "special-attack":
+                            stat[5] = s.base_stat;
+                            break;
                     }
+                });
+
+                setRadarChartOptions(Object.assign(baseOptions, {
+                    series: [{ data: stat }],
+                    title: { text: d.name }
                 }));
             }
         })();
@@ -31,7 +76,7 @@ export default function Page() {
     return (
         <Layout>
             <article>
-                <RadarChart options={radarChartOptions} />
+                {radarChartOptions && <RadarChart options={radarChartOptions}/>}
             </article>
         </Layout>
     );

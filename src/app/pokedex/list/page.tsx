@@ -19,7 +19,7 @@ export default function Page() {
                     return {
                         id: id,
                         name: item.name,
-                        thumbnailUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${id}.gif`,
+                        thumbnailUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
                         url: item.urlm
                     }
                 }));
@@ -31,9 +31,9 @@ export default function Page() {
         <Layout>
             <article>
                 <ul>
-                    {list.map((item) => {
+                    {list.map((item, index) => {
                         return (
-                            <li className="flex flex-row items-center">
+                            <li key={`poke-dex-list-${item.id}`} className="flex flex-row items-center">
                                 <Image
                                     src={item.thumbnailUrl}
                                     alt={item.name}
