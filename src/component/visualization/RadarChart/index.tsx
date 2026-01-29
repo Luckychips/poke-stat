@@ -1,20 +1,35 @@
-import { useEffect } from "react";
-import ApexCharts from "apexcharts";
+'use client'
+import { useEffect, useRef } from "react";
 import { ChartOptionProps } from "@/type/visualization";
+
 
 interface Props {
     options: ChartOptionProps
 }
 
 export default function RadarChart({ options }: Props) {
+    const chartRef = useRef<HTMLDivElement | null>(null);
+
     useEffect(() => {
-        const chart = new ApexCharts(document.querySelector('#radar-chart'), options);
-        chart.render();
+        let chart: any;
+
+        const loadChart = async () => {
+            const ApexCharts = (await import('apexcharts')).default;
+
+            if (!chartRef.current) return;
+
+            chart = new ApexCharts(chartRef.current, options);
+            chart.render();
+        };
+
+        loadChart();
 
         return () => {
-            chart.destroy();
+            if (chart) {
+                chart.destroy();
+            }
         };
     }, []);
 
-    return <div id="radar-chart" />;
+    return <div id="radar-chart" ref={chartRef} />;
 }
