@@ -29,25 +29,7 @@ export default function Page() {
 
     return (
         <Layout>
-            <article>
-                <ul>
-                    {list.map((item) => {
-                        return (
-                            <li className="flex flex-row items-center">
-                                <Image
-                                    src={item.thumbnailUrl}
-                                    alt={item.name}
-                                    width={32}
-                                    height={32}
-                                    priority
-                                />
-                                <span className="text-black">{item.id}</span>
-                                <span className="text-black">{item.name}</span>
-                            </li>
-                        );
-                    })}
-                </ul>
-            </article>
+            <article>hello world</article>
         </Layout>
     );
 }
