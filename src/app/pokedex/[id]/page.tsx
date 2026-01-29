@@ -2,7 +2,8 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import type { PokeDex } from "@/type/pokedex";
-import { Layout } from "@/component";
+import { Layout, RadarChart } from "@/component";
+import radarChartOptions from "@/component/visualization/data_radar.json";
 
 const limit = 20;
 
@@ -29,7 +30,9 @@ export default function Page() {
 
     return (
         <Layout>
-            <article>hello world</article>
+            <article>
+                <RadarChart options={radarChartOptions} />
+            </article>
         </Layout>
     );
 }
