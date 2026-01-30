@@ -46,43 +46,58 @@ const baseOptions = {
 };
 
 export default function Content() {
-    const [title, setTitle] = useState("");
+    const [name, setName] = useState("");
+    const [types, setTypes] = useState<string[]>([]);
     const [radarChartOptions, setRadarChartOptions] = useState<ChartOptionProps | null>(null);
     const params = useParams<{ id: string }>();
     const id = params.id;
+
+    const getTypes = (d: any) => {
+        const array: string[] = [];
+        d.types.map((t: any) => {
+            array.push(t.type.name);
+        });
+
+        return array;
+    }
+
+    const getStats = (d: any) => {
+        const array: Array<number> = Array(6);
+        d.stats.map((s: any) => {
+            switch (s.stat.name) {
+                case "hp":
+                    array[0] = s.base_stat;
+                    break;
+                case "attack":
+                    array[1] = s.base_stat;
+                    break;
+                case "defense":
+                    array[2] = s.base_stat;
+                    break;
+                case "speed":
+                    array[3] = s.base_stat;
+                    break;
+                case "special-defense":
+                    array[4] = s.base_stat;
+                    break;
+                case "special-attack":
+                    array[5] = s.base_stat;
+                    break;
+            }
+        });
+
+        return array;
+    }
 
     useEffect(() => {
         (async () => {
             const r = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
             if (r.status === 200) {
                 const d = await r.json();
-                const stat: Array<number> = Array(6);
-                d.stats.map((s: any) => {
-                    switch (s.stat.name) {
-                        case "hp":
-                            stat[0] = s.base_stat;
-                            break;
-                        case "attack":
-                            stat[1] = s.base_stat;
-                            break;
-                        case "defense":
-                            stat[2] = s.base_stat;
-                            break;
-                        case "speed":
-                            stat[3] = s.base_stat;
-                            break;
-                        case "special-defense":
-                            stat[4] = s.base_stat;
-                            break;
-                        case "special-attack":
-                            stat[5] = s.base_stat;
-                            break;
-                    }
-                });
-
-                setTitle(d.name);
+                setName(d.name);
+                setTypes(getTypes(d));
                 setRadarChartOptions(Object.assign(baseOptions, {
-                    series: [{ data: stat }],
+                    series: [{ data: getStats(d) }],
                 }));
             }
         })();
@@ -91,7 +106,7 @@ export default function Content() {
     return (
         <section style={{ margin: 36, height: 'calc(100vh - 72px)' }}>
             <div className="flex flex-col h-full">
-                <ContentHeader title={title} />
+                <ContentHeader name={name} types={types} />
                 <ul className="grid grid-cols-5 gap-x-[36px]" style={{ marginBottom: 36 }}>
                     <li>
                         <Card style={{}}>
