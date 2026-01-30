@@ -12,10 +12,6 @@ const nextConfig: NextConfig = {
                 protocol: "http", // 모든 HTTP 도메인 허용 (보안 주의)
                 hostname: "**",
             },
-            {
-                protocol: "https",
-                hostname: "*.placeholdit.com"
-            }
         ],
     },
 };

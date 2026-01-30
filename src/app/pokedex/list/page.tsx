@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useListPageStore } from "@/store/core";
 import type { PokeDex } from "@/type/pokedex";
-import { Layout, Pagination } from "@/component";
+import { Layout, Pagination, ImageLoader } from "@/component";
 
 const limit = 15;
 
@@ -44,15 +44,7 @@ export default function Page() {
                         return (
                             <li key={`poke-dex-list-${item.id}`} className="flex flex-row items-center p-1">
                                 <span className="text-black text-center pr-4" style={{ minWidth: 32 }}>{item.id}</span>
-                                <Image
-                                    src={item.thumbnailUrl}
-                                    alt={item.name}
-                                    width={36}
-                                    height={36}
-                                    placeholder="blur"
-                                    blurDataURL="https://placeholdit.com/36x36/dddddd/999999"
-                                    priority
-                                />
+                                <ImageLoader src={item.thumbnailUrl} alt={item.name} />
                                 <span className="text-black pl-4 cursor-pointer">{item.name}</span>
                             </li>
                         );

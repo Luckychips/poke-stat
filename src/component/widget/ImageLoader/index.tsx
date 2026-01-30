@@ -13,8 +13,9 @@ export default function ImageLoader({ src, alt }: Props) {
         <Image
             src={imageUrl}
             alt={alt}
-            width={32}
-            height={32}
+            width={36}
+            height={36}
+            onError={() => setImageUrl("/placeholder.png")}
         />
     );
 }
