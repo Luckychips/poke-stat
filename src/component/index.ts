@@ -1,6 +1,8 @@
 export { default as Layout } from "./design/Layout";
 export { default as Sidebar } from "./design/Sidebar";
+export { default as Pagination } from "./design/Pagination";
 
 export { default as BaseIcon } from "./widget/BaseIcon";
+export { default as ImageLoader } from "./widget/ImageLoader";
 
 export { default as RadarChart } from "./visualization/RadarChart";
