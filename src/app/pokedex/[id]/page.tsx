@@ -22,6 +22,12 @@ const baseOptions = {
             top: 1
         }
     },
+    dataLabels: {
+        enabled: true,
+        background: {
+            enabled: true,
+        }
+    },
     title: { text: "" },
     stroke: { width: 2 },
     fill: { opacity: 0.1 },
