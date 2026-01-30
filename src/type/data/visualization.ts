@@ -8,6 +8,9 @@ export type ChartOptionProps = {
     chart?: {
         height?: number;
         type?: string;
+        animations?: {
+            enabled?: boolean;
+        },
         dropShadow?: {
             enabled?: boolean;
             blur?: number;
