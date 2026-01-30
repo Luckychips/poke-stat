@@ -35,7 +35,11 @@ const baseOptions = {
     stroke: { width: 1 },
     fill: { opacity: 0.1 },
     markers: { size: 0 },
-    yaxis: { stepSize: 30 },
+    yaxis: {
+        tickAmount: 5,
+        min: 0,
+        max: 200,
+    },
     xaxis: {
         categories: ["H", "A", "B", "S", "D", "C"]
     }

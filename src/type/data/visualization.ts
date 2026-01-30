@@ -38,6 +38,9 @@ export type ChartOptionProps = {
     };
     yaxis?: {
         stepSize?: number;
+        tickAmount?: number;
+        min?: number;
+        max?: number;
     };
     xaxis?: {
         categories?: number[] | string[];
