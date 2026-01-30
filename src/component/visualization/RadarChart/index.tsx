@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useRef } from "react";
-import { ChartOptionProps } from "@/type/visualization";
+import { ChartOptionProps } from "@/type/data/visualization";
 
 
 interface Props {

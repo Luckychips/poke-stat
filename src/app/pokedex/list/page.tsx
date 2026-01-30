@@ -1,14 +1,14 @@
 'use client'
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { useListPageStore } from "@/store/core";
-import type { PokeDex } from "@/type/pokedex";
+import type { PokeDex } from "@/type/data/pokedex";
 import { Layout, Pagination, ImageLoader } from "@/component";
 
 const limit = 15;
 
 export default function Page() {
+    const router = useRouter();
     const { currentPage, setCurrentPage } = useListPageStore();
     const [list, setList] = useState<PokeDex[]>([]);
     const [itemTotalCount, setItemTotalCount] = useState(0);
@@ -38,20 +38,30 @@ export default function Page() {
 
     return (
         <Layout>
-            <article>
-                <ul>
-                    {list.map((item, index) => {
-                        return (
-                            <li key={`poke-dex-list-${item.id}`} className="flex flex-row items-center p-1">
-                                <span className="text-black text-center pr-4" style={{ minWidth: 32 }}>{item.id}</span>
-                                <ImageLoader src={item.thumbnailUrl} alt={item.name} />
-                                <span className="text-black pl-4 cursor-pointer">{item.name}</span>
-                            </li>
-                        );
-                    })}
-                </ul>
-                <Pagination itemTotalCount={itemTotalCount} pageLimit={limit} />
-            </article>
+            <section className="w-19/20 min-w-19/20 h-screen bg-gray-100" style={{ minWidth: 1100 }}>
+                <article className="bg-white shadow-sm rounded-lg" style={{ margin: 36, height: 'calc(100vh - 72px)' }}>
+                    <div className="relative flex flex-col h-full p-4">
+                        <article>
+                            <ul>
+                                {list.map((item, index) => {
+                                    return (
+                                        <li key={`poke-dex-list-${item.id}`} className="flex flex-row items-center p-1">
+                                            <span className="text-black text-center pr-4" style={{ minWidth: 32 }}>{item.id}</span>
+                                            <ImageLoader src={item.thumbnailUrl} alt={item.name} />
+                                            <span
+                                                className="text-black pl-4 cursor-pointer"
+                                                onClick={() => router.push(`/pokedex/${item.id}`)}>
+                                    {item.name}
+                                </span>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                            <Pagination itemTotalCount={itemTotalCount} pageLimit={limit} />
+                        </article>
+                    </div>
+                </article>
+            </section>
         </Layout>
     );
 }

@@ -4,5 +4,6 @@ export { default as Pagination } from "./design/Pagination";
 
 export { default as BaseIcon } from "./widget/BaseIcon";
 export { default as ImageLoader } from "./widget/ImageLoader";
+export { default as Card } from "./widget/Card";
 
 export { default as RadarChart } from "./visualization/RadarChart";
