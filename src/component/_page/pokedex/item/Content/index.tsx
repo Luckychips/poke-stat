@@ -47,8 +47,11 @@ const baseOptions = {
 };
 
 export default function Content() {
+    const [dexId, setDexId] = useState(0);
     const [name, setName] = useState("");
     const [types, setTypes] = useState<string[]>([]);
+    const [summary, setSummary] = useState("");
+    const [description, setDescription] = useState("");
     const [radarChartOptions, setRadarChartOptions] = useState<ChartOptionProps | null>(null);
     const params = useParams<{ id: string }>();
     const id = params.id;
@@ -92,10 +95,10 @@ export default function Content() {
 
     useEffect(() => {
         (async () => {
-            const r = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
+            const r = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
             if (r.status === 200) {
                 const d = await r.json();
-                setName(d.name);
+                setDexId(parseInt(id));
                 setTypes(getTypes(d));
                 setRadarChartOptions(Object.assign(baseOptions, {
                     series: [{ data: getStats(d) }],
@@ -104,10 +107,45 @@ export default function Content() {
         })();
     }, []);
 
+    useEffect(() => {
+        (async () => {
+            const r = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
+            if (r.status === 200) {
+                const d = await r.json();
+                for (let i = 0; i < d.names.length; i++) {
+                    if (d.names[i].language.name === "ko") {
+                        setName(d.names[i].name);
+                        break;
+                    }
+                }
+
+                for (let i = 0; i < d.genera.length; i++) {
+                    if (d.genera[i].language.name === "ko") {
+                        setSummary(d.genera[i].genus);
+                        break;
+                    }
+                }
+
+                for (let i = 0; i < d.flavor_text_entries.length; i++) {
+                    if (d.flavor_text_entries[i].language.name === "ko") {
+                        setDescription(d.flavor_text_entries[i].flavor_text);
+                        break;
+                    }
+                }
+            }
+        })();
+    }, []);
+
     return (
         <section style={{ margin: 36, height: 'calc(100vh - 72px)' }}>
             <div className="flex flex-col h-full">
-                <ContentHeader name={name} types={types} />
+                <ContentHeader dexId={dexId} name={name} types={types} />
+                <Card style={{ marginBottom: 36 }}>
+                    <div className="flex flex-col">
+                        <span className="font-bold text-sm text-black" style={{ marginBottom: 9 }}>{summary}</span>
+                        <span className="text-xs text-black">{description}</span>
+                    </div>
+                </Card>
                 <ul className="grid grid-cols-5 gap-x-[36px]" style={{ marginBottom: 36 }}>
                     <li>
                         <Card style={{}}>

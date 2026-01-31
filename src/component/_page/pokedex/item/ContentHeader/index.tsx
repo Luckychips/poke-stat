@@ -21,11 +21,12 @@ import {
 } from "@/core/theme";
 
 interface Props {
+    dexId: number;
     name: string;
     types: string[];
 }
 
-export default function ContentHeader({ name, types }: Props) {
+export default function ContentHeader({ dexId, name, types }: Props) {
     const getTypeTagColor = (type: string) => {
         let color = "";
         switch (type) {
@@ -102,7 +103,10 @@ export default function ContentHeader({ name, types }: Props) {
                     <span className="pr-2">{name}</span>
                     <ul className="flex">
                         {types.map((type) => (
-                            <li className="px-2 py-1 mx-1 rounded-sm" style={{ backgroundColor: getTypeTagColor(type) }}>
+                            <li
+                                key={`id-${dexId}-type-${type}`}
+                                className="px-2 py-1 mx-1 rounded-sm"
+                                style={{ backgroundColor: getTypeTagColor(type) }}>
                                 <b className="text-white">{type}</b>
                             </li>
                         ))}

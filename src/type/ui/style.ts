@@ -4,4 +4,5 @@ export type StyleProps = {
     marginBottom?: number;
     marginLeft?: number;
     marginRight?: number;
+    fontColor?: string;
 }
