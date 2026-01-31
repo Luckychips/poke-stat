@@ -1,0 +1,32 @@
+export const POKEMON_STAT = {
+    HP: "HP",
+    ATTACK: "ATTACK",
+    DEFENSE: "DEFENSE",
+    SPEED: "SPEED",
+    SPECIAL_DEFENSE: "SPECIAL-DEFENSE",
+    SPECIAL_ATTACK: "SPECIAL-ATTACK",
+}
+
+export const POKEMON_TYPE = {
+    NORMAL: "NORMAL",
+    FIGHTING: "FIGHTING",
+    FLYING: "FLYING",
+    POISON: "POISON",
+    GROUND: "GROUND",
+    ROCK: "ROCK",
+    BUG: "BUG",
+    GHOST: "GHOST",
+    STEEL: "STEEL",
+    FIRE: "FIRE",
+    WATER: "WATER",
+    GRASS: "GRASS",
+    ELECTRIC: "ELECTRIC",
+    PSYCHIC: "PSYCHIC",
+    ICE: "ICE",
+    DRAGON: "DRAGON",
+    DARK: "DARK",
+    FAIRY: "FAIRY",
+    STELLAR: "STELLAR",
+    UNKNOWN: "UNKNOWN",
+    SHADOW: "SHADOW",
+}

@@ -1,4 +1,24 @@
-import { typeSteelColor, typeFairyColor, typePsychicColor } from "@/core/theme";
+import { POKEMON_TYPE } from "@/core/value";
+import {
+    typeNormalColor,
+    typeFightingColor,
+    typeFlyingColor,
+    typePoisonColor,
+    typeGroundColor,
+    typeRockColor,
+    typeBugColor,
+    typeGhostColor,
+    typeSteelColor,
+    typeFireColor,
+    typeWaterColor,
+    typeGrassColor,
+    typeElectricColor,
+    typePsychicColor,
+    typeIceColor,
+    typeDragonColor,
+    typeDarkColor,
+    typeFairyColor,
+} from "@/core/theme";
 
 interface Props {
     name: string;
@@ -9,14 +29,66 @@ export default function ContentHeader({ name, types }: Props) {
     const getTypeTagColor = (type: string) => {
         let color = "";
         switch (type) {
-            case "steel":
+            case POKEMON_TYPE.NORMAL.toLowerCase():
+                color = typeNormalColor;
+                break;
+            case POKEMON_TYPE.FIGHTING.toLowerCase():
+                color = typeFightingColor;
+                break;
+            case POKEMON_TYPE.FLYING.toLowerCase():
+                color = typeFlyingColor;
+                break;
+            case POKEMON_TYPE.POISON.toLowerCase():
+                color = typePoisonColor;
+                break;
+            case POKEMON_TYPE.GROUND.toLowerCase():
+                color = typeGroundColor;
+                break;
+            case POKEMON_TYPE.ROCK.toLowerCase():
+                color = typeRockColor;
+                break;
+            case POKEMON_TYPE.BUG.toLowerCase():
+                color = typeBugColor;
+                break;
+            case POKEMON_TYPE.GHOST.toLowerCase():
+                color = typeGhostColor;
+                break;
+            case POKEMON_TYPE.STEEL.toLowerCase():
                 color = typeSteelColor;
                 break;
-            case "fairy":
+            case POKEMON_TYPE.FIRE.toLowerCase():
+                color = typeFireColor;
+                break;
+            case POKEMON_TYPE.WATER.toLowerCase():
+                color = typeWaterColor;
+                break;
+            case POKEMON_TYPE.GRASS.toLowerCase():
+                color = typeGrassColor;
+                break;
+            case POKEMON_TYPE.ELECTRIC.toLowerCase():
+                color = typeElectricColor;
+                break;
+            case POKEMON_TYPE.PSYCHIC.toLowerCase():
+                color = typePsychicColor;
+                break;
+            case POKEMON_TYPE.ICE.toLowerCase():
+                color = typeIceColor;
+                break;
+            case POKEMON_TYPE.DRAGON.toLowerCase():
+                color = typeDragonColor;
+                break;
+            case POKEMON_TYPE.DARK.toLowerCase():
+                color = typeDarkColor;
+                break;
+            case POKEMON_TYPE.FAIRY.toLowerCase():
                 color = typeFairyColor;
                 break;
-            case "psychic":
-                color = typePsychicColor;
+            case POKEMON_TYPE.STELLAR.toLowerCase():
+                break;
+            case POKEMON_TYPE.UNKNOWN.toLowerCase():
+                break;
+            case POKEMON_TYPE.SHADOW.toLowerCase():
+                break;
         }
 
         return color;

@@ -2,7 +2,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Card, RadarChart } from "@/component";
-import { ChartOptionProps } from "@/type/data/visualization";
+import { POKEMON_STAT } from "@/core/value";
+import type { ChartOptionProps } from "@/type/data/visualization";
 import ContentHeader from "../ContentHeader";
 
 const baseOptions = {
@@ -65,22 +66,22 @@ export default function Content() {
         const array: Array<number> = Array(6);
         d.stats.map((s: any) => {
             switch (s.stat.name) {
-                case "hp":
+                case POKEMON_STAT.HP.toLowerCase():
                     array[0] = s.base_stat;
                     break;
-                case "attack":
+                case POKEMON_STAT.ATTACK.toLowerCase():
                     array[1] = s.base_stat;
                     break;
-                case "defense":
+                case POKEMON_STAT.DEFENSE.toLowerCase():
                     array[2] = s.base_stat;
                     break;
-                case "speed":
+                case POKEMON_STAT.SPEED.toLowerCase():
                     array[3] = s.base_stat;
                     break;
-                case "special-defense":
+                case POKEMON_STAT.SPECIAL_DEFENSE.toLowerCase():
                     array[4] = s.base_stat;
                     break;
-                case "special-attack":
+                case POKEMON_STAT.SPECIAL_ATTACK.toLowerCase():
                     array[5] = s.base_stat;
                     break;
             }
