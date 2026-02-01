@@ -52,6 +52,7 @@ export default function Content() {
     const [types, setTypes] = useState<string[]>([]);
     const [summary, setSummary] = useState("");
     const [description, setDescription] = useState("");
+    const [optionalDescription, setOptionalDescription] = useState("");
     const [radarChartOptions, setRadarChartOptions] = useState<ChartOptionProps | null>(null);
     const params = useParams<{ id: string }>();
     const id = params.id;
@@ -132,9 +133,22 @@ export default function Content() {
                         break;
                     }
                 }
+
+                for (let i = 0; i < d.flavor_text_entries.length; i++) {
+                    if (d.flavor_text_entries[i].language.name === "en") {
+                        setOptionalDescription(d.flavor_text_entries[i].flavor_text);
+                        break;
+                    }
+                }
             }
         })();
     }, []);
+
+    useEffect(() => {
+        if (description.length <= 0 && optionalDescription.length > 0) {
+            setDescription(optionalDescription);
+        }
+    }, [description, optionalDescription]);
 
     return (
         <section style={{ margin: 36, height: 'calc(100vh - 72px)' }}>
@@ -142,15 +156,17 @@ export default function Content() {
                 <ContentHeader dexId={dexId} name={name} types={types} />
                 <Card style={{ marginBottom: 36 }}>
                     <div className="flex flex-row">
-                        {dexId > 0 && (
-                            <ImageLoader
-                                src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${dexId}.gif`}
-                                alt={name}
-                                width={45}
-                                height={45}
-                            />
-                        )}
-                        <p className="flex flex-col mb-4 pl-4">
+                        <p>
+                            {dexId > 0 && (
+                                <ImageLoader
+                                    src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${dexId}.gif`}
+                                    alt={name}
+                                    width={45}
+                                    height={45}
+                                />
+                            )}
+                        </p>
+                        <p className="max-w-3/5 flex flex-col mb-4 pl-4">
                             <span className="font-bold text-sm text-black" style={{ marginBottom: 9 }}>{summary}</span>
                             <span className="text-xs text-black">{description}</span>
                         </p>
