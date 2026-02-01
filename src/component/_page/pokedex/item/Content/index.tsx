@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { Card, RadarChart, ImageLoader } from "@/component";
 import { POKEMON_STAT } from "@/core/value";
 import type { ChartOptionProps } from "@/type/data/visualization";
+import type { PokeAbility } from "@/type/data/pokedex";
 import ContentHeader from "../ContentHeader";
 
 const baseOptions = {
@@ -50,6 +51,8 @@ export default function Content() {
     const [dexId, setDexId] = useState(0);
     const [name, setName] = useState("");
     const [types, setTypes] = useState<string[]>([]);
+    const [noProcessAbilities, setNoProcessAbilities] = useState<PokeAbility[]>([]);
+    const [abilities, setAbilities] = useState<PokeAbility[]>([]);
     const [summary, setSummary] = useState("");
     const [description, setDescription] = useState("");
     const [optionalDescription, setOptionalDescription] = useState("");
@@ -101,6 +104,19 @@ export default function Content() {
                 const d = await r.json();
                 setDexId(parseInt(id));
                 setTypes(getTypes(d));
+                const list: PokeAbility[] = [];
+                d.abilities.map((a: any) => {
+                    const o: PokeAbility = {
+                        isHidden: a.is_hidden,
+                        name: "",
+                        summary: "",
+                        slot: a.slot,
+                        apiUrl: a.ability.url,
+                    };
+
+                    list.push(o);
+                });
+                setNoProcessAbilities(list);
                 setRadarChartOptions(Object.assign(baseOptions, {
                     series: [{ data: getStats(d) }],
                 }));
@@ -145,6 +161,39 @@ export default function Content() {
     }, []);
 
     useEffect(() => {
+        (async () => {
+            if (noProcessAbilities.length) {
+                const fetches = noProcessAbilities.map(async (ability) => {
+                    const r = await fetch(ability.apiUrl);
+                    if (r.status === 200) {
+                        const json = await r.json();
+                        for (let i = 0; i < json.flavor_text_entries.length; i++) {
+                            if (json.flavor_text_entries[i].language.name === "ko") {
+                                ability.summary = json.flavor_text_entries[i].flavor_text;
+                                break;
+                            }
+                        }
+
+                        for (let i = 0; i < json.names.length; i++) {
+                            if (json.names[i].language.name === "ko") {
+                                ability.name = json.names[i].name;
+                                break;
+                            }
+                        }
+                    }
+
+                    return ability;
+                });
+
+                const settled = await Promise.allSettled(fetches);
+                setAbilities(settled
+                    .filter((r): r is PromiseFulfilledResult<PokeAbility> => r.status === "fulfilled")
+                    .map(r => r.value));
+            }
+        })();
+    }, [noProcessAbilities]);
+
+    useEffect(() => {
         if (description.length <= 0 && optionalDescription.length > 0) {
             setDescription(optionalDescription);
         }
@@ -166,39 +215,19 @@ export default function Content() {
                                 />
                             )}
                         </p>
-                        <p className="max-w-3/5 flex flex-col mb-4 pl-4">
-                            <span className="font-bold text-sm text-black" style={{ marginBottom: 9 }}>{summary}</span>
+                        <div className="max-w-3/5 flex flex-col mb-4 pl-4">
+                            <span className="font-bold text-sm text-black">{summary}</span>
+                            <ul className="flex flex-row" style={{ paddingBottom: 2 }}>
+                                {abilities.map((a) => (
+                                    <li key={`ability-list-item-${dexId}-${a.slot}`} className="mr-1">
+                                        <span className={`text-xs text-black ${a.isHidden ? "font-bold" : ""}`}>{a.name}</span>
+                                    </li>
+                                ))}
+                            </ul>
                             <span className="text-xs text-black">{description}</span>
-                        </p>
+                        </div>
                     </div>
                 </Card>
-                <ul className="grid grid-cols-5 gap-x-[36px]" style={{ marginBottom: 36 }}>
-                    <li>
-                        <Card style={{}}>
-                            <div>123</div>
-                        </Card>
-                    </li>
-                    <li>
-                        <Card style={{}}>
-                            <div>123</div>
-                        </Card>
-                    </li>
-                    <li>
-                        <Card style={{}}>
-                            <div>123</div>
-                        </Card>
-                    </li>
-                    <li>
-                        <Card style={{}}>
-                            <div>123</div>
-                        </Card>
-                    </li>
-                    <li>
-                        <Card style={{}}>
-                            <div>123</div>
-                        </Card>
-                    </li>
-                </ul>
                 <div className="flex grow">
                     <Card classes="w-2/3" style={{ marginRight: 36 }}>
                         <div>123</div>
