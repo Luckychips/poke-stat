@@ -98,7 +98,7 @@ export default function ContentHeader({ dexId, name, types }: Props) {
     return (
         <div className="relative">
             <div className="text-black ">
-                <h1 className="font-bold pb-1">Report</h1>
+                <h1 className="font-bold pb-1">{dexId} Report</h1>
                 <h2 className="flex items-center text-xs" style={{ marginBottom: 27 }}>
                     <span className="pr-2">{name}</span>
                     <ul className="flex">

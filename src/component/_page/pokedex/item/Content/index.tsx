@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { Card, RadarChart } from "@/component";
+import { Card, RadarChart, ImageLoader } from "@/component";
 import { POKEMON_STAT } from "@/core/value";
 import type { ChartOptionProps } from "@/type/data/visualization";
 import ContentHeader from "../ContentHeader";
@@ -141,9 +141,19 @@ export default function Content() {
             <div className="flex flex-col h-full">
                 <ContentHeader dexId={dexId} name={name} types={types} />
                 <Card style={{ marginBottom: 36 }}>
-                    <div className="flex flex-col">
-                        <span className="font-bold text-sm text-black" style={{ marginBottom: 9 }}>{summary}</span>
-                        <span className="text-xs text-black">{description}</span>
+                    <div className="flex flex-row">
+                        {dexId > 0 && (
+                            <ImageLoader
+                                src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${dexId}.gif`}
+                                alt={name}
+                                width={45}
+                                height={45}
+                            />
+                        )}
+                        <p className="flex flex-col mb-4 pl-4">
+                            <span className="font-bold text-sm text-black" style={{ marginBottom: 9 }}>{summary}</span>
+                            <span className="text-xs text-black">{description}</span>
+                        </p>
                     </div>
                 </Card>
                 <ul className="grid grid-cols-5 gap-x-[36px]" style={{ marginBottom: 36 }}>
