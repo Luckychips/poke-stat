@@ -12,3 +12,10 @@ export type PokeAbility = {
     slot: number;
     apiUrl: string;
 }
+
+export type PokeSkillSet = {
+    levelLearnedAt: number;
+    name: string;
+    versionGroup: string;
+    url: string;
+}

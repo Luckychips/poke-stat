@@ -4,8 +4,10 @@ import { useParams } from "next/navigation";
 import { Card, RadarChart, ImageLoader } from "@/component";
 import { POKEMON_STAT } from "@/core/value";
 import type { ChartOptionProps } from "@/type/data/visualization";
-import type { PokeAbility } from "@/type/data/pokedex";
+import type { PokeAbility, PokeSkillSet } from "@/type/data/pokedex";
 import ContentHeader from "../ContentHeader";
+import GenerationTabs from "../GenerationTabs";
+import SkillSets from "../SkillSets";
 
 const baseOptions = {
     series: [
@@ -53,9 +55,12 @@ export default function Content() {
     const [types, setTypes] = useState<string[]>([]);
     const [noProcessAbilities, setNoProcessAbilities] = useState<PokeAbility[]>([]);
     const [abilities, setAbilities] = useState<PokeAbility[]>([]);
+    const [noProcessSkills, setNoProcessSkills] = useState<any[]>([]);
+    const [skillSets, setSkillSets] = useState<PokeSkillSet[]>([]);
     const [summary, setSummary] = useState("");
     const [description, setDescription] = useState("");
     const [optionalDescription, setOptionalDescription] = useState("");
+    const [selectedGeneration, setSelectedGeneration] = useState(0);
     const [radarChartOptions, setRadarChartOptions] = useState<ChartOptionProps | null>(null);
     const params = useParams<{ id: string }>();
     const id = params.id;
@@ -97,6 +102,101 @@ export default function Content() {
         return array;
     }
 
+    const getTargetVersions = () => {
+        let targetVersions: string[] = [];
+        switch (selectedGeneration) {
+            case 1:
+                targetVersions = ["red-blue"];
+                break;
+            case 2:
+                targetVersions = ["gold-silver"];
+                break;
+            case 3:
+                targetVersions = ["ruby-sapphire"];
+                break;
+            case 4:
+                targetVersions = ["diamond-pearl"];
+                break;
+            case 5:
+                targetVersions = ["black-white"];
+                break;
+            case 6:
+                targetVersions = ["x-y"];
+                break;
+            case 7:
+                targetVersions = ["sun-moon"];
+                break;
+            case 8:
+                targetVersions = ["sword-shield"];
+                break;
+            case 9:
+                targetVersions = ["scarlet-violet"];
+                break;
+        }
+
+        return targetVersions;
+    }
+
+    const getLevelUpSkills = (skills: any): PokeSkillSet[] => {
+        /*
+        1. red-blue, yellow
+        2. gold-silver, crystal
+        3. ruby-sapphire, emerald, firered-leafgreen, colosseum, xd
+        4. diamond-pearl, platinum, heartgold-soulsilver
+        5. black-white, black-2-white-2
+        6. x-y, omega-ruby-alpha-sapphire
+        7. sun-moon, ultra-sun-ultra-moon, lets-go-pikachu-lets-go-eevee
+        8. sword-shield, the-isle-of-armor, the-crown-tundra, brilliant-diamond-shining-pearl, legends-arceus
+        9. scarlet-violet, the-teal-mask, the-indigo-disk
+         */
+        const list = skills.filter((skill: any) => {
+            let hasLevel = false;
+            let hasVersion = false;
+            for (let i = 0; i < skill.version_group_details.length; i++) {
+                const detail = skill.version_group_details[i];
+                if (detail.level_learned_at !== 0) {
+                    hasLevel = true;
+                }
+
+                const versionName = detail.version_group.name.toLowerCase();
+                if (getTargetVersions().includes(versionName)) {
+                    hasVersion = true;
+                }
+            }
+
+            return hasLevel && hasVersion;
+        }).map((skill: any) => {
+            let targetSkill = null;
+            for (let i = 0; i < skill.version_group_details.length; i++) {
+                const detail = skill.version_group_details[i];
+                const versionName = detail.version_group.name.toLowerCase();
+                if (detail.level_learned_at !== 0 && getTargetVersions().includes(versionName)) {
+                    targetSkill = detail;
+                }
+            }
+
+            const newSkill = {
+                levelLearnedAt: 0,
+                name: skill.move.name,
+                versionGroup: "",
+                url: skill.move.url,
+            };
+
+            if (targetSkill) {
+                newSkill.levelLearnedAt = targetSkill.level_learned_at;
+                newSkill.versionGroup = targetSkill.version_group.name;
+            }
+
+            return newSkill;
+        }).filter((skill: PokeSkillSet) => {
+            return skill.levelLearnedAt !== 0;
+        });
+
+        return list.sort((a: PokeSkillSet, b: PokeSkillSet) => {
+            return a.levelLearnedAt - b.levelLearnedAt;
+        });
+    }
+
     useEffect(() => {
         (async () => {
             const r = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
@@ -116,6 +216,7 @@ export default function Content() {
 
                     list.push(o);
                 });
+                setNoProcessSkills(d.moves);
                 setNoProcessAbilities(list);
                 setRadarChartOptions(Object.assign(baseOptions, {
                     series: [{ data: getStats(d) }],
@@ -199,6 +300,13 @@ export default function Content() {
         }
     }, [description, optionalDescription]);
 
+    useEffect(() => {
+        if (selectedGeneration > 0) {
+            console.log(getLevelUpSkills(noProcessSkills));
+            setSkillSets(getLevelUpSkills(noProcessSkills));
+        }
+    }, [selectedGeneration]);
+
     return (
         <section style={{ margin: 36, height: 'calc(100vh - 72px)' }}>
             <div className="flex flex-col h-full">
@@ -229,8 +337,12 @@ export default function Content() {
                     </div>
                 </Card>
                 <div className="flex grow">
-                    <Card classes="w-2/3" style={{ marginRight: 36 }}>
-                        <div>123</div>
+                    <Card classes="w-2/3" style={{marginRight: 36}}>
+                        <GenerationTabs
+                            selected={selectedGeneration}
+                            onSelect={(selected: number) => setSelectedGeneration(selected)}
+                        />
+                        <SkillSets skillSets={skillSets} />
                     </Card>
                     <Card classes="w-1/3" style={{}}>
                         {radarChartOptions && <RadarChart options={radarChartOptions}/>}
