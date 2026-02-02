@@ -19,4 +19,7 @@ export const typeDragonColor = "#5060e1";
 export const typeDarkColor = "#624d4f";
 export const typeFairyColor = "#ef70ef";
 
+export const damagePhysicalColor = "#ee7a56";
+export const damageSpecialColor = "#6883c7";
+export const damageStatusColor = "#7a7373";
 

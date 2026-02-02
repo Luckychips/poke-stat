@@ -16,6 +16,8 @@ export type PokeAbility = {
 export type PokeSkillSet = {
     levelLearnedAt: number;
     name: string;
+    skillType: string;
+    damageType: string;
     versionGroup: string;
     url: string;
 }

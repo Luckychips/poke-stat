@@ -178,6 +178,8 @@ export default function Content() {
             const newSkill = {
                 levelLearnedAt: 0,
                 name: skill.move.name,
+                skillType: "",
+                damageType: "",
                 versionGroup: "",
                 url: skill.move.url,
             };
@@ -302,7 +304,6 @@ export default function Content() {
 
     useEffect(() => {
         if (selectedGeneration > 0) {
-            console.log(getLevelUpSkills(noProcessSkills));
             setSkillSets(getLevelUpSkills(noProcessSkills));
         }
     }, [selectedGeneration]);
