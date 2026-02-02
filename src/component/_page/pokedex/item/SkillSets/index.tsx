@@ -16,7 +16,6 @@ export default function SkillSets({ skillSets } : Props) {
                     const r = await fetch(skill.url);
                     if (r.status === 200) {
                         const json = await r.json();
-                        console.log(json);
                         for (let i = 0; i < json.names.length; i++) {
                             if (json.names[i].language.name === "ko") {
                                 skill.name = json.names[i].name;

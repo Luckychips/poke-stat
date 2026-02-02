@@ -306,7 +306,7 @@ export default function Content() {
         if (selectedGeneration > 0) {
             setSkillSets(getLevelUpSkills(noProcessSkills));
         }
-    }, [selectedGeneration]);
+    }, [selectedGeneration, noProcessSkills]);
 
     return (
         <section style={{ margin: 36, height: 'calc(100vh - 72px)' }}>
