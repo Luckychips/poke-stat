@@ -364,7 +364,7 @@ export default function Content() {
                             selected={selectedGeneration}
                             onSelect={(selected: number) => setSelectedGeneration(selected)}
                         />
-                        <SkillSets skillSets={skillSets} />
+                        {skillSets.length && <SkillSets skillSets={skillSets} />}
                     </Card>
                     <Card classes="w-1/3" style={{}}>
                         {radarChartOptions && <RadarChart options={radarChartOptions}/>}
