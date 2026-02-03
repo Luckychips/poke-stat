@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { PokeSkillSet } from "@/type/data/pokedex";
+import type {PokeAbility, PokeSkillSet} from "@/type/data/pokedex";
 import { getTypeTagColor, getDamageTagColor } from "@/core/value";
 
 interface Props {
@@ -8,6 +8,22 @@ interface Props {
 
 export default function SkillSets({ skillSets } : Props) {
     const [translatedSkillSets, setTranslatedSkillSets] = useState<PokeSkillSet[]>([]);
+
+    const onHoverSkillSet = (target: PokeSkillSet, isHover: boolean) => {
+        setTranslatedSkillSets(prev => {
+            return prev.map((item) => {
+                const isMatchedSkill = target.name === item.name &&
+                    target.skillType === item.skillType &&
+                    target.damageType === item.damageType &&
+                    target.versionGroup === item.versionGroup;
+
+                return isMatchedSkill ? {
+                    ...item,
+                    isVisibleTooltip: isHover,
+                } : item;
+            });
+        });
+    }
 
     useEffect(() => {
         (async () => {
@@ -19,6 +35,13 @@ export default function SkillSets({ skillSets } : Props) {
                         for (let i = 0; i < json.names.length; i++) {
                             if (json.names[i].language.name === "ko") {
                                 skill.name = json.names[i].name;
+                                break;
+                            }
+                        }
+
+                        for (let i = 0; i < json.flavor_text_entries.length; i++) {
+                            if (json.flavor_text_entries[i].language.name === "ko") {
+                                skill.summary = json.flavor_text_entries[i].flavor_text;
                                 break;
                             }
                         }
@@ -53,7 +76,17 @@ export default function SkillSets({ skillSets } : Props) {
                           style={{ backgroundColor: getDamageTagColor(skill.damageType) }}>
                         <b className="text-white text-xs">{skill.damageType}</b>
                     </span>
-                    <span className="text-xs">{skill.name}</span>
+                    <p>
+                        <span
+                            className="text-xs"
+                            onMouseEnter={() => onHoverSkillSet(skill, true)}
+                            onMouseOut={() => onHoverSkillSet(skill, false)}>{skill.name}</span>
+                        {skill.isVisibleTooltip && (
+                            <span className="absolute z-10 whitespace-nowrap px-3 py-2 text-xs font-medium text-white bg-gray-800 rounded-sm shadow-xs">
+                                {skill.summary}
+                            </span>
+                        )}
+                    </p>
                 </li>
             ))}
         </ul>

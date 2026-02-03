@@ -65,6 +65,17 @@ export default function Content() {
     const params = useParams<{ id: string }>();
     const id = params.id;
 
+    const onHoverAbility = (target: PokeAbility, isHover: boolean) => {
+        setAbilities(prev => {
+            return prev.map((item) => {
+                return target.slot === item.slot ? {
+                    ...item,
+                    isVisibleTooltip: isHover,
+                } : item;
+            });
+        });
+    }
+
     const getTypes = (d: any) => {
         const array: string[] = [];
         d.types.map((t: any) => {
@@ -178,6 +189,7 @@ export default function Content() {
             const newSkill = {
                 levelLearnedAt: 0,
                 name: skill.move.name,
+                summary: "",
                 skillType: "",
                 damageType: "",
                 versionGroup: "",
@@ -209,6 +221,7 @@ export default function Content() {
                 const list: PokeAbility[] = [];
                 d.abilities.map((a: any) => {
                     const o: PokeAbility = {
+                        isVisibleTooltip: false,
                         isHidden: a.is_hidden,
                         name: "",
                         summary: "",
@@ -328,8 +341,16 @@ export default function Content() {
                             <span className="font-bold text-sm text-black">{summary}</span>
                             <ul className="flex flex-row" style={{ paddingBottom: 2 }}>
                                 {abilities.map((a) => (
-                                    <li key={`ability-list-item-${dexId}-${a.slot}`} className="mr-1">
-                                        <span className={`text-xs text-black ${a.isHidden ? "font-bold" : ""}`}>{a.name}</span>
+                                    <li key={`ability-list-item-${dexId}-${a.slot}`} className="relative mr-1">
+                                        <span
+                                            className={`text-xs text-black ${a.isHidden ? "font-bold" : ""}`}
+                                            onMouseEnter={() => onHoverAbility(a, true)}
+                                            onMouseOut={() => onHoverAbility(a, false)}>{a.name}</span>
+                                        {a.isVisibleTooltip && (
+                                            <span className="absolute z-10 whitespace-nowrap px-3 py-2 text-xs font-medium text-white bg-gray-800 rounded-sm shadow-xs">
+                                                {a.summary}
+                                            </span>
+                                        )}
                                     </li>
                                 ))}
                             </ul>
