@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { Card, RadarChart, ImageLoader } from "@/component";
+import { RadarChart, Heatmap, Card, ImageLoader } from "@/component";
 import { POKEMON_STAT } from "@/core/value";
 import type { ChartOptionProps } from "@/type/data/visualization";
 import type { PokeAbility, PokeSkillSet } from "@/type/data/pokedex";
@@ -218,6 +218,7 @@ export default function Content() {
                 const d = await r.json();
                 setDexId(parseInt(id));
                 setTypes(getTypes(d));
+                console.log(d);
                 const list: PokeAbility[] = [];
                 d.abilities.map((a: any) => {
                     const o: PokeAbility = {
@@ -358,15 +359,45 @@ export default function Content() {
                         </div>
                     </div>
                 </Card>
+                <ul className="grid grid-cols-5 gap-x-[36px]" style={{ marginBottom: 36 }}>
+                    <li>
+                        <Card style={{}}>
+                            <div>123</div>
+                        </Card>
+                    </li>
+                    <li>
+                        <Card style={{}}>
+                            <div>123</div>
+                        </Card>
+                    </li>
+                    <li>
+                        <Card style={{}}>
+                            <div>123</div>
+                        </Card>
+                    </li>
+                    <li>
+                        <Card style={{}}>
+                            <div>123</div>
+                        </Card>
+                    </li>
+                    <li>
+                        <Card style={{}}>
+                            <div>123</div>
+                        </Card>
+                    </li>
+                </ul>
                 <div className="flex grow">
-                    <Card classes="w-2/3" style={{marginRight: 36}}>
+                    <Card classes="w-2/5" style={{ marginRight: 36 }}>
                         <GenerationTabs
                             selected={selectedGeneration}
                             onSelect={(selected: number) => setSelectedGeneration(selected)}
                         />
                         {skillSets.length && <SkillSets skillSets={skillSets} />}
                     </Card>
-                    <Card classes="w-1/3" style={{}}>
+                    <Card classes="w-2/5" style={{ marginRight: 36 }}>
+                        <Heatmap />
+                    </Card>
+                    <Card classes="w-1/5" style={{}}>
                         {radarChartOptions && <RadarChart options={radarChartOptions}/>}
                     </Card>
                 </div>

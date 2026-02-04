@@ -62,7 +62,7 @@ export default function SkillSets({ skillSets } : Props) {
     }, [skillSets]);
 
     return (
-        <ul className="h-[500px] overflow-y-auto pt-4 pl-2">
+        <ul className="h-[410px] overflow-y-auto pt-4 pl-2">
             {translatedSkillSets.map((skill) => (
                 <li
                     key={`skill-set-item-${skill.levelLearnedAt}-${skill.name}-${skill.versionGroup}`}
