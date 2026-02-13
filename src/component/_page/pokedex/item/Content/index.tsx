@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { RadarChart, Heatmap, Card, ImageLoader } from "@/component";
-import { POKEMON_STAT } from "@/core/value";
+import { POKEMON_STAT, pokemonTypeList } from "@/core/value";
 import type { ChartOptionProps } from "@/type/data/visualization";
 import type { PokeAbility, PokeSkillSet } from "@/type/data/pokedex";
 import ContentHeader from "../ContentHeader";
@@ -13,12 +13,11 @@ const baseOptions = {
     series: [
         {
             name: "",
-            data: []
+            data: [],
         }
     ],
     chart: {
         height: 350,
-        type: "radar",
         animations: {
             enabled: false,
         },
@@ -62,6 +61,7 @@ export default function Content() {
     const [optionalDescription, setOptionalDescription] = useState("");
     const [selectedGeneration, setSelectedGeneration] = useState(0);
     const [radarChartOptions, setRadarChartOptions] = useState<ChartOptionProps | null>(null);
+    const [heatmapOptions, setHeatmapOptions] = useState<ChartOptionProps | null>(null);
     const params = useParams<{ id: string }>();
     const id = params.id;
 
@@ -218,7 +218,6 @@ export default function Content() {
                 const d = await r.json();
                 setDexId(parseInt(id));
                 setTypes(getTypes(d));
-                console.log(d);
                 const list: PokeAbility[] = [];
                 d.abilities.map((a: any) => {
                     const o: PokeAbility = {
@@ -234,12 +233,92 @@ export default function Content() {
                 });
                 setNoProcessSkills(d.moves);
                 setNoProcessAbilities(list);
-                setRadarChartOptions(Object.assign(baseOptions, {
+                setRadarChartOptions({
+                    ...baseOptions,
+                    chart: {
+                        ...baseOptions.chart,
+                        type: "radar",
+                    },
                     series: [{ data: getStats(d) }],
-                }));
+                });
+
+                const heatmapSeries = pokemonTypeList.map((atk) => {
+                    return {
+                        name: `ATK-${atk.name}`,
+                        data: pokemonTypeList.map((def, j) => ({
+                            x: `DEF-${def.name}`,
+                            y: atk.damageRatio[j],
+                        })),
+                    };
+                });
+
+                setHeatmapOptions({
+                    chart: {
+                        height: 450,
+                        type: "heatmap",
+                    },
+                    dataLabels: {
+                        enabled: false,
+                    },
+                    plotOptions: {
+                        heatmap: {
+                            enableShades: false,
+                            colorScale: {
+                                ranges: [
+                                    {
+                                        from: 0,
+                                        to: 0,
+                                        color: "#0f172a",
+                                    },
+                                    {
+                                        from: 0.01,
+                                        to: 0.25,
+                                        color: "#1e40af",
+                                    },
+                                    {
+                                        from: 0.26,
+                                        to: 0.5,
+                                        color: "#60a5fa",
+                                    },
+                                    {
+                                        from: 0.99,
+                                        to: 1.01,
+                                        color: "#e5e7eb",
+                                    },
+                                    {
+                                        from: 1.5,
+                                        to: 2.01,
+                                        color: "#fb923c",
+                                    },
+                                    {
+                                        from: 3.5,
+                                        to: 4.01,
+                                        color: "#dc2626",
+                                    },
+                                ],
+                            },
+                        },
+                    },
+                    xaxis: {
+                        labels: {
+                            show: false,
+                        },
+                    },
+                    yaxis: {
+                        labels: {
+                            show: false,
+                        },
+                    },
+                    series: heatmapSeries,
+                    title: { text: "Damage Relation" },
+                });
             }
         })();
     }, []);
+
+    // useEffect(() => {
+    //     console.log(heatmapOptions)
+    // }, [heatmapOptions]);
 
     useEffect(() => {
         (async () => {
@@ -359,33 +438,6 @@ export default function Content() {
                         </div>
                     </div>
                 </Card>
-                <ul className="grid grid-cols-5 gap-x-[36px]" style={{ marginBottom: 36 }}>
-                    <li>
-                        <Card style={{}}>
-                            <div>123</div>
-                        </Card>
-                    </li>
-                    <li>
-                        <Card style={{}}>
-                            <div>123</div>
-                        </Card>
-                    </li>
-                    <li>
-                        <Card style={{}}>
-                            <div>123</div>
-                        </Card>
-                    </li>
-                    <li>
-                        <Card style={{}}>
-                            <div>123</div>
-                        </Card>
-                    </li>
-                    <li>
-                        <Card style={{}}>
-                            <div>123</div>
-                        </Card>
-                    </li>
-                </ul>
                 <div className="flex grow">
                     <Card classes="w-2/5" style={{ marginRight: 36 }}>
                         <GenerationTabs
@@ -395,7 +447,7 @@ export default function Content() {
                         {skillSets.length && <SkillSets skillSets={skillSets} />}
                     </Card>
                     <Card classes="w-2/5" style={{ marginRight: 36 }}>
-                        <Heatmap />
+                        {heatmapOptions && <Heatmap options={heatmapOptions} />}
                     </Card>
                     <Card classes="w-1/5" style={{}}>
                         {radarChartOptions && <RadarChart options={radarChartOptions}/>}

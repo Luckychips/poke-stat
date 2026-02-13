@@ -4,7 +4,7 @@ import { ChartOptionProps } from "@/type/data/visualization";
 
 
 interface Props {
-    options: ChartOptionProps
+    options: ChartOptionProps;
 }
 
 export default function RadarChart({ options }: Props) {

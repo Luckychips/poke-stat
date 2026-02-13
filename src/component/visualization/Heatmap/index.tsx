@@ -1,63 +1,48 @@
 'use client'
 import { useEffect, useRef } from "react";
+import type { ChartOptionProps } from "@/type/data/visualization";
 
-const options = {
-    series: [
-        { name: "H", data: [45] },
-        { name: "A", data: [70] },
-        { name: "B", data: [30] },
-        { name: "S", data: [90] },
-        { name: "D", data: [55] },
-        { name: "C", data: [20] },
-    ],
-    chart: {
-        height: 350,
-        type: "heatmap",
-    },
-    dataLabels: {
-        enabled: false
-    },
-    colors: ["#008FFB"],
-    xaxis: {
-        type: "category",
-        position: "top",
-        categories: [2020, 2021, 2022],
-        labels: {
-            show: false,
-        },
-    },
-    annotations: {
-        position: "front",
-        xaxis: [2020, 2021, 2022].map((year) => ({
-            x: year,
-            y: 0,
-            label: {
-                text: year,
-                offsetY: -20,
-                style: {
-                    background: "#CBD5E1",
-                    color: "#0F172A",
-                    fontSize: "12px",
-                    padding: {
-                        left: 6,
-                        right: 6,
-                        top: 3,
-                        bottom: 3,
-                    },
-                },
-            }
-        })),
-    },
-    title: {
-        text: 'Damage Relation'
-    },
-};
+// const options = {
+    // series: [
+    //     { name: "H", data: [45] },
+    //     { name: "A", data: [70] },
+    //     { name: "B", data: [30] },
+    //     { name: "S", data: [90] },
+    //     { name: "D", data: [55] },
+    //     { name: "C", data: [20] },
+    //     {
+    //         name: '월요일',
+    //         data: [
+    //             { x: '00시', y: 10 },
+    //             { x: '06시', y: 30 },
+    //             { x: '12시', y: 50 },
+    //             { x: '18시', y: 40 }
+    //         ]
+    //     },
+    //     {
+    //         name: '화요일',
+    //         data: [
+    //             { x: '00시', y: 20 },
+    //             { x: '06시', y: 25 },
+    //             { x: '12시', y: 60 },
+    //             { x: '18시', y: 45 }
+    //         ]
+    //     }
+    // ],
+//     chart: {
+//         height: 350,
+//         type: "heatmap",
+//     },
+//     title: {
+//         text: "Damage Relation",
+//     },
+// };
 
 interface Props {
-
+    options: ChartOptionProps;
 }
 
-export default function Heatmap() {
+export default function Heatmap({ options }: Props) {
     const chartRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {

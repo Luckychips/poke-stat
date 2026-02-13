@@ -42,6 +42,101 @@ export const POKEMON_TYPE = {
     SHADOW: "SHADOW",
 }
 
+
+
+export const pokemonTypeList = [
+    {
+        name: POKEMON_TYPE.NORMAL,
+        color: typeNormalColor,
+        damageRatio: [1,1,1,1,1,0.5,1,0,0.5,1,1,1,1,1,1,1,1,1],
+    },
+    {
+        name: POKEMON_TYPE.FIGHTING,
+        color: typeFightingColor,
+        damageRatio: [2,1,0.5,0.5,1,2,0.5,0,2,1,1,1,1,0.5,2,1,2,0.5],
+    },
+    {
+        name: POKEMON_TYPE.FLYING,
+        color: typeFlyingColor,
+        damageRatio: [1,2,1,1,1,0.5,2,1,0.5,1,1,2,0.5,1,1,1,1,1],
+    },
+    {
+        name: POKEMON_TYPE.POISON,
+        color: typePoisonColor,
+        damageRatio: [1,1,1,0.5,0.5,0.5,1,0.5,0,1,1,2,1,1,1,1,1,2],
+    },
+    {
+        name: POKEMON_TYPE.GROUND,
+        color: typeGroundColor,
+        damageRatio: [1,1,0,2,1,2,0.5,1,2,2,1,0.5,2,1,1,1,1,1],
+    },
+    {
+        name: POKEMON_TYPE.ROCK,
+        color: typeRockColor,
+        damageRatio: [1,0.5,2,1,0.5,1,2,1,0.5,2,1,1,1,1,2,1,1,1],
+    },
+    {
+        name: POKEMON_TYPE.BUG,
+        color: typeBugColor,
+        damageRatio: [1,0.5,0.5,0.5,1,1,1,0.5,0.5,0.5,1,2,1,2,1,1,2,0.5],
+    },
+    {
+        name: POKEMON_TYPE.GHOST,
+        color: typeGhostColor,
+        damageRatio: [0,1,1,1,1,1,1,2,1,1,1,1,1,2,1,1,0.5,1],
+    },
+    {
+        name: POKEMON_TYPE.STEEL,
+        color: typeSteelColor,
+        damageRatio: [1,1,1,1,1,2,1,1,0.5,0.5,0.5,1,0.5,1,2,1,1,2],
+    },
+    {
+        name: POKEMON_TYPE.FIRE,
+        color: typeFireColor,
+        damageRatio: [1,1,1,1,1,0.5,2,1,2,0.5,0.5,2,1,1,2,0.5,1,1],
+    },
+    {
+        name: POKEMON_TYPE.WATER,
+        color: typeWaterColor,
+        damageRatio: [1,1,1,1,2,2,1,1,1,2,0.5,0.5,1,1,1,0.5,1,1],
+    },
+    {
+        name: POKEMON_TYPE.GRASS,
+        color: typeGrassColor,
+        damageRatio: [1,1,0.5,0.5,2,2,0.5,1,0.5,0.5,2,0.5,1,1,1,0.5,1,1],
+    },
+    {
+        name: POKEMON_TYPE.ELECTRIC,
+        color: typeElectricColor,
+        damageRatio: [1,1,2,1,0,1,1,1,1,1,2,0.5,0.5,1,1,0.5,1,1],
+    },
+    {
+        name: POKEMON_TYPE.PSYCHIC,
+        color: typePsychicColor,
+        damageRatio: [1,2,1,2,1,1,1,1,0.5,1,1,1,1,0.5,1,1,0,1],
+    },
+    {
+        name: POKEMON_TYPE.ICE,
+        color: typeIceColor,
+        damageRatio: [1,1,2,1,2,1,1,1,0.5,0.5,0.5,2,1,1,0.5,2,1,1],
+    },
+    {
+        name: POKEMON_TYPE.DRAGON,
+        color: typeDragonColor,
+        damageRatio: [1,1,1,1,1,1,1,1,0.5,1,1,1,1,1,1,2,1,0],
+    },
+    {
+        name: POKEMON_TYPE.DARK,
+        color: typeDarkColor,
+        damageRatio: [1,0.5,1,1,1,1,1,2,1,1,1,1,1,2,1,1,0.5,0.5],
+    },
+    {
+        name: POKEMON_TYPE.FAIRY,
+        color: typeFairyColor,
+        damageRatio: [1,2,1,0.5,1,1,1,1,0.5,0.5,1,1,1,1,1,2,2,1],
+    },
+];
+
 export const POKEMON_SKILL_DAMAGE_TYPE = {
     PHYSICAL: "PHYSICAL",
     SPECIAL: "SPECIAL",

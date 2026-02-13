@@ -1,6 +1,10 @@
 export type SeriesProps = {
     name?: string;
-    data?: number[];
+    data?: number[] | {
+        x?: string;
+        y?: number;
+        fillColor?: string;
+    }[];
 }
 
 export type ChartOptionProps = {
@@ -18,8 +22,27 @@ export type ChartOptionProps = {
             top?: number;
         };
     };
+    plotOptions?: {
+        heatmap?: {
+            enableShades?: boolean;
+            colorScale?: {
+                ranges?: {
+                    from?: number;
+                    to?: number;
+                    color?: string;
+                    name?: string;
+                }[];
+            }
+        }
+    };
     dataLabels?: {
         enabled?: boolean;
+        formatter?: (val: any, opts: any) => string;
+        style?: {
+            fontSize?: string;
+            fontWeight?: number;
+            colors?: string[];
+        };
         background?: {
             enabled?: boolean;
         };
@@ -37,6 +60,9 @@ export type ChartOptionProps = {
         size?: number;
     };
     yaxis?: {
+        labels?: {
+            show?: boolean;
+        };
         stepSize?: number;
         tickAmount?: number;
         min?: number;
@@ -44,5 +70,8 @@ export type ChartOptionProps = {
     };
     xaxis?: {
         categories?: number[] | string[];
+        labels?: {
+            show?: boolean;
+        };
     };
 }
