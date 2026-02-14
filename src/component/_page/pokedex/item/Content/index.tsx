@@ -2,7 +2,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { RadarChart, Heatmap, Card, ImageLoader } from "@/component";
-import { POKEMON_STAT, pokemonTypeList } from "@/core/value";
+import {typeNormalColor, typePsychicColor} from "@/core/theme";
+import { pokemonTypeList, POKEMON_STAT } from "@/core/value";
 import type { ChartOptionProps } from "@/type/data/visualization";
 import type { PokeAbility, PokeSkillSet } from "@/type/data/pokedex";
 import ContentHeader from "../ContentHeader";
@@ -44,7 +45,7 @@ const baseOptions = {
         max: 200,
     },
     xaxis: {
-        categories: ["H", "A", "B", "S", "D", "C"]
+        categories: [],
     }
 };
 
@@ -216,8 +217,9 @@ export default function Content() {
             const r = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
             if (r.status === 200) {
                 const d = await r.json();
+                const retrieveTypes = getTypes(d);
                 setDexId(parseInt(id));
-                setTypes(getTypes(d));
+                setTypes(retrieveTypes);
                 const list: PokeAbility[] = [];
                 d.abilities.map((a: any) => {
                     const o: PokeAbility = {
@@ -233,13 +235,37 @@ export default function Content() {
                 });
                 setNoProcessSkills(d.moves);
                 setNoProcessAbilities(list);
+                const radarSeriesData = getStats(d);
+                const radarSeriesDataMaxValue = Math.max(...radarSeriesData);
+                let radarSeriesColor = "#000";
+                if (retrieveTypes.length) {
+                    for (let i = 0; i < pokemonTypeList.length; i++) {
+                        if (retrieveTypes[0] === pokemonTypeList[i].name.toLowerCase()) {
+                            radarSeriesColor = pokemonTypeList[i].color;
+                            break;
+                        }
+                    }
+                }
                 setRadarChartOptions({
                     ...baseOptions,
                     chart: {
                         ...baseOptions.chart,
                         type: "radar",
                     },
-                    series: [{ data: getStats(d) }],
+                    colors: [radarSeriesColor],
+                    dataLabels: {
+                        ...baseOptions.dataLabels,
+                        style: {
+                            colors: [radarSeriesColor],
+                            fontWeight: 600,
+                        },
+                        formatter: (v: number) =>
+                            v === radarSeriesDataMaxValue ? `★ ${v}` : `${v}`,
+                    },
+                    xaxis: {
+                        categories: ["H", "A", "B", "S", "D", "C"],
+                    },
+                    series: [{ data: radarSeriesData }],
                 });
 
                 const heatmapSeries = pokemonTypeList.map((atk) => {

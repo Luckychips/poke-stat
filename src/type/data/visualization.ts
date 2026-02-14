@@ -22,6 +22,7 @@ export type ChartOptionProps = {
             top?: number;
         };
     };
+    colors?: string[];
     plotOptions?: {
         heatmap?: {
             enableShades?: boolean;
@@ -58,6 +59,15 @@ export type ChartOptionProps = {
     };
     markers?: {
         size?: number;
+        strokeWidth?: number;
+        strokeColors?: string[];
+        discrete?: {
+            seriesIndex?: number;
+            dataPointIndex?: number;
+            fillColor?: string;
+            strokeColor?: string;
+            size?: number;
+        }[];
     };
     yaxis?: {
         labels?: {
