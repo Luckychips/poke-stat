@@ -4,9 +4,11 @@ interface Props {
     dexId: number;
     name: string;
     types: string[];
+    currentType: string;
+    setCurrentType: (v: string) => void;
 }
 
-export default function ContentHeader({ dexId, name, types }: Props) {
+export default function ContentHeader({ dexId, name, types, currentType, setCurrentType }: Props) {
     return (
         <div className="relative">
             <div className="text-black ">
@@ -17,8 +19,9 @@ export default function ContentHeader({ dexId, name, types }: Props) {
                         {types.map((type) => (
                             <li
                                 key={`id-${dexId}-type-${type}`}
-                                className="px-2 py-1 mx-1 rounded-sm"
-                                style={{ backgroundColor: getTypeTagColor(type) }}>
+                                className="px-2 py-1 mx-1 rounded-sm cursor-pointer"
+                                style={{ backgroundColor: getTypeTagColor(type) }}
+                                onClick={() => setCurrentType(type)}>
                                 <b className="text-white">{type}</b>
                             </li>
                         ))}

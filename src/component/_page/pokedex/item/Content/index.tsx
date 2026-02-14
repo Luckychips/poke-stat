@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { RadarChart, Heatmap, Card, ImageLoader } from "@/component";
-import {typeNormalColor, typePsychicColor} from "@/core/theme";
 import { pokemonTypeList, POKEMON_STAT } from "@/core/value";
 import type { ChartOptionProps } from "@/type/data/visualization";
 import type { PokeAbility, PokeSkillSet } from "@/type/data/pokedex";
@@ -53,6 +52,7 @@ export default function Content() {
     const [dexId, setDexId] = useState(0);
     const [name, setName] = useState("");
     const [types, setTypes] = useState<string[]>([]);
+    const [currentType, setCurrentType] = useState("");
     const [noProcessAbilities, setNoProcessAbilities] = useState<PokeAbility[]>([]);
     const [abilities, setAbilities] = useState<PokeAbility[]>([]);
     const [noProcessSkills, setNoProcessSkills] = useState<any[]>([]);
@@ -239,6 +239,7 @@ export default function Content() {
                 const radarSeriesDataMaxValue = Math.max(...radarSeriesData);
                 let radarSeriesColor = "#000";
                 if (retrieveTypes.length) {
+                    setCurrentType(retrieveTypes[0]);
                     for (let i = 0; i < pokemonTypeList.length; i++) {
                         if (retrieveTypes[0] === pokemonTypeList[i].name.toLowerCase()) {
                             radarSeriesColor = pokemonTypeList[i].color;
@@ -427,10 +428,40 @@ export default function Content() {
         }
     }, [selectedGeneration, noProcessSkills]);
 
+    useEffect(() => {
+        let radarSeriesColor = "#000";
+        for (let i = 0; i < pokemonTypeList.length; i++) {
+            if (currentType === pokemonTypeList[i].name.toLowerCase()) {
+                radarSeriesColor = pokemonTypeList[i].color;
+                break;
+            }
+        }
+
+        if (radarChartOptions) {
+            setRadarChartOptions({
+                ...radarChartOptions,
+                colors: [radarSeriesColor],
+                dataLabels: {
+                    ...radarChartOptions.dataLabels,
+                    style: {
+                        colors: [radarSeriesColor],
+                        fontWeight: 600,
+                    },
+                },
+            });
+        }
+    }, [currentType]);
+
     return (
         <section style={{ margin: 36, height: 'calc(100vh - 72px)' }}>
             <div className="flex flex-col h-full">
-                <ContentHeader dexId={dexId} name={name} types={types} />
+                <ContentHeader
+                    dexId={dexId}
+                    name={name}
+                    types={types}
+                    currentType={currentType}
+                    setCurrentType={(v: string) => setCurrentType(v)}
+                />
                 <Card style={{ marginBottom: 36 }}>
                     <div className="flex flex-row">
                         <p>

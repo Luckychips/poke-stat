@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChartOptionProps } from "@/type/data/visualization";
 
 
@@ -9,6 +9,7 @@ interface Props {
 
 export default function RadarChart({ options }: Props) {
     const chartRef = useRef<HTMLDivElement | null>(null);
+    const [instance, setInstance] = useState<any>(null);
 
     useEffect(() => {
         let chart: any;
@@ -20,6 +21,7 @@ export default function RadarChart({ options }: Props) {
 
             chart = new ApexCharts(chartRef.current, options);
             chart.render();
+            setInstance(chart);
         };
 
         loadChart();
@@ -30,6 +32,23 @@ export default function RadarChart({ options }: Props) {
             }
         };
     }, []);
+
+    useEffect(() => {
+        if (instance) {
+            instance.updateOptions(
+                {
+                    colors: options.colors,
+                    dataLabels: {
+                        style: {
+                            colors: options.dataLabels?.style?.colors,
+                        }
+                    }
+                },
+                true,
+                true,
+            );
+        }
+    }, [instance, options]);
 
     return <div id="radar-chart" ref={chartRef} />;
 }
