@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { RadarChart, Heatmap, Card, ImageLoader } from "@/component";
-import { pokemonTypeList, POKEMON_STAT } from "@/core/value";
+import {pokemonTypeList, POKEMON_STAT, POKEMON_TYPE} from "@/core/value";
 import type { ChartOptionProps } from "@/type/data/visualization";
 import type { PokeAbility, PokeSkillSet } from "@/type/data/pokedex";
 import ContentHeader from "../ContentHeader";
@@ -273,84 +273,127 @@ export default function Content() {
                     },
                     series: [{ data: radarSeriesData }],
                 });
-
-                const heatmapSeries = pokemonTypeList.map((atk) => {
-                    return {
-                        name: `ATK-${atk.name}`,
-                        data: pokemonTypeList.map((def, j) => ({
-                            x: `DEF-${def.name}`,
-                            y: atk.damageRatio[j],
-                        })),
-                    };
-                });
-
-                setHeatmapOptions({
-                    chart: {
-                        height: 450,
-                        type: "heatmap",
-                    },
-                    dataLabels: {
-                        enabled: false,
-                    },
-                    plotOptions: {
-                        heatmap: {
-                            enableShades: false,
-                            colorScale: {
-                                ranges: [
-                                    {
-                                        from: 0,
-                                        to: 0,
-                                        color: "#0f172a",
-                                    },
-                                    {
-                                        from: 0.01,
-                                        to: 0.25,
-                                        color: "#1e40af",
-                                    },
-                                    {
-                                        from: 0.26,
-                                        to: 0.5,
-                                        color: "#60a5fa",
-                                    },
-                                    {
-                                        from: 0.99,
-                                        to: 1.01,
-                                        color: "#e5e7eb",
-                                    },
-                                    {
-                                        from: 1.5,
-                                        to: 2.01,
-                                        color: "#fb923c",
-                                    },
-                                    {
-                                        from: 3.5,
-                                        to: 4.01,
-                                        color: "#dc2626",
-                                    },
-                                ],
-                            },
-                        },
-                    },
-                    xaxis: {
-                        labels: {
-                            show: false,
-                        },
-                    },
-                    yaxis: {
-                        labels: {
-                            show: false,
-                        },
-                    },
-                    series: heatmapSeries,
-                    title: { text: "Damage Relation" },
-                });
             }
         })();
     }, []);
 
-    // useEffect(() => {
-    //     console.log(heatmapOptions)
-    // }, [heatmapOptions]);
+    useEffect(() => {
+        (async () => {
+            const typeIds = Array.from({ length: 18 }, (_, i) => i + 1);
+            const fetches = typeIds.map(async (id) => {
+                const ratios = Array.from({ length: 18 }, () => 1);
+                const r = await fetch(`https://pokeapi.co/api/v2/type/${id}`);
+                if (r.status === 200) {
+                    const d = await r.json();
+                    const toDoubleDamages = d.damage_relations.double_damage_to;
+                    const toHalfDamages = d.damage_relations.half_damage_to;
+                    const toNoDamages = d.damage_relations.no_damage_to;
+                    for (let i = 0; i < toDoubleDamages.length; i++) {
+                        const split = toDoubleDamages[i].url.split("/");
+                        const targetIndex = split[split.length - 2] - 1;
+                        ratios[targetIndex] = 2;
+                    }
+
+                    for (let i = 0; i < toHalfDamages.length; i++) {
+                        const split = toHalfDamages[i].url.split("/");
+                        const targetIndex = split[split.length - 2] - 1;
+                        ratios[targetIndex] = 0.5;
+                    }
+
+                    for (let i = 0; i < toNoDamages.length; i++) {
+                        const split = toNoDamages[i].url.split("/");
+                        const targetIndex = split[split.length - 2] - 1;
+                        ratios[targetIndex] = 0;
+                    }
+                }
+
+                return ratios;
+            });
+
+            const settled = await Promise.allSettled(fetches);
+            const damageRatios = settled
+                .filter((r): r is PromiseFulfilledResult<number[]> => r.status === "fulfilled")
+                .map(r => r.value);
+            const updateRadios = pokemonTypeList.map((o, i) => {
+                return {
+                    name: o.name,
+                    color: o.color,
+                    damageRatio: damageRatios[i],
+                };
+            });
+            const heatmapSeries = updateRadios.map((atk) => {
+                return {
+                    name: `ATK-${atk.name}`,
+                    data: updateRadios.map((def, j) => ({
+                        x: `DEF-${def.name}`,
+                        y: atk.damageRatio[j],
+                    })),
+                };
+            });
+
+            setHeatmapOptions({
+                chart: {
+                    height: 450,
+                    type: "heatmap",
+                },
+                dataLabels: {
+                    enabled: false,
+                },
+                plotOptions: {
+                    heatmap: {
+                        enableShades: false,
+                        colorScale: {
+                            ranges: [
+                                {
+                                    from: 0,
+                                    to: 0,
+                                    color: "#0f172a",
+                                },
+                                {
+                                    from: 0.01,
+                                    to: 0.25,
+                                    color: "#1e40af",
+                                },
+                                {
+                                    from: 0.26,
+                                    to: 0.5,
+                                    color: "#60a5fa",
+                                },
+                                {
+                                    from: 0.99,
+                                    to: 1.01,
+                                    color: "#e5e7eb",
+                                },
+                                {
+                                    from: 1.5,
+                                    to: 2.01,
+                                    color: "#fb923c",
+                                },
+                                {
+                                    from: 3.5,
+                                    to: 4.01,
+                                    color: "#dc2626",
+                                },
+                            ],
+                        },
+                    },
+                },
+                xaxis: {
+                    labels: {
+                        show: false,
+                    },
+                },
+                yaxis: {
+                    labels: {
+                        show: false,
+                    },
+                },
+                series: heatmapSeries,
+                title: { text: "Damage Relation" },
+            });
+        })();
+
+    }, []);
 
     useEffect(() => {
         (async () => {

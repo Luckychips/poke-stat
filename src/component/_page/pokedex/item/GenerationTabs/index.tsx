@@ -1,3 +1,4 @@
+'use client'
 import { useEffect, useState } from "react";
 import { mainThemeColor } from "@/core/theme";
 

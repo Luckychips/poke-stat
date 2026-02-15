@@ -1,3 +1,4 @@
+'use client'
 import { getTypeTagColor } from "@/core/value";
 
 interface Props {

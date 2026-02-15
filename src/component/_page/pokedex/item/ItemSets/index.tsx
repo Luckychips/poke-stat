@@ -1,3 +1,4 @@
+'use client'
 import { MouseEvent, useEffect, useState } from "react";
 import { ImageLoader } from "@/component";
 import type { PokeItemSet } from "@/type/data/pokedex";

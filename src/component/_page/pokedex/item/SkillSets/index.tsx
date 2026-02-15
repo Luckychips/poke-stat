@@ -1,3 +1,4 @@
+'use client'
 import { useEffect, useState } from "react";
 import { getTypeTagColor, getDamageTagColor } from "@/core/value";
 import type { PokeSkillSet } from "@/type/data/pokedex";
