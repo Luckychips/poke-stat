@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type {PokeAbility, PokeSkillSet} from "@/type/data/pokedex";
 import { getTypeTagColor, getDamageTagColor } from "@/core/value";
+import type { PokeSkillSet } from "@/type/data/pokedex";
 
 interface Props {
     skillSets: PokeSkillSet[];

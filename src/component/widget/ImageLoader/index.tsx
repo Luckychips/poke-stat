@@ -14,6 +14,7 @@ export default function ImageLoader({ src, alt, width = 36, height = 36 }: Props
 
     return (
         <Image
+            className="pointer-events-none"
             src={imageUrl}
             alt={alt}
             width={width}

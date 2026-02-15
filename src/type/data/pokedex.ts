@@ -26,3 +26,10 @@ export interface PokeSkillSet extends Expander {
     versionGroup: string;
     url: string;
 }
+
+export interface PokeItemSet extends Expander {
+    name: string;
+    summary: string;
+    thumbnailUrl: string;
+    category: string;
+}

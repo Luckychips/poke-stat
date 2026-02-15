@@ -8,6 +8,7 @@ import type { PokeAbility, PokeSkillSet } from "@/type/data/pokedex";
 import ContentHeader from "../ContentHeader";
 import GenerationTabs from "../GenerationTabs";
 import SkillSets from "../SkillSets";
+import ItemSets from "../ItemSets";
 
 const baseOptions = {
     series: [
@@ -57,6 +58,7 @@ export default function Content() {
     const [abilities, setAbilities] = useState<PokeAbility[]>([]);
     const [noProcessSkills, setNoProcessSkills] = useState<any[]>([]);
     const [skillSets, setSkillSets] = useState<PokeSkillSet[]>([]);
+    const [itemApis, setItemApis] = useState<{ name: string; url: string }[]>([]);
     const [summary, setSummary] = useState("");
     const [description, setDescription] = useState("");
     const [optionalDescription, setOptionalDescription] = useState("");
@@ -220,6 +222,9 @@ export default function Content() {
                 const retrieveTypes = getTypes(d);
                 setDexId(parseInt(id));
                 setTypes(retrieveTypes);
+                setItemApis(d.held_items.map((o: any) => {
+                    return o.item;
+                }));
                 const list: PokeAbility[] = [];
                 d.abilities.map((a: any) => {
                     const o: PokeAbility = {
@@ -462,39 +467,44 @@ export default function Content() {
                     currentType={currentType}
                     setCurrentType={(v: string) => setCurrentType(v)}
                 />
-                <Card style={{ marginBottom: 36 }}>
-                    <div className="flex flex-row">
-                        <p>
-                            {dexId > 0 && (
-                                <ImageLoader
-                                    src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${dexId}.gif`}
-                                    alt={name}
-                                    width={45}
-                                    height={45}
-                                />
-                            )}
-                        </p>
-                        <div className="max-w-3/5 flex flex-col mb-4 pl-4">
-                            <span className="font-bold text-sm text-black">{summary}</span>
-                            <ul className="flex flex-row" style={{ paddingBottom: 2 }}>
-                                {abilities.map((a) => (
-                                    <li key={`ability-list-item-${dexId}-${a.slot}`} className="relative mr-1">
+                <div className="flex grow" style={{ marginBottom: 36 }}>
+                    <Card classes="w-2/3" style={{ marginRight: 36 }}>
+                        <div className="flex flex-row">
+                            <p>
+                                {dexId > 0 && (
+                                    <ImageLoader
+                                        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${dexId}.gif`}
+                                        alt={name}
+                                        width={45}
+                                        height={45}
+                                    />
+                                )}
+                            </p>
+                            <div className="max-w-3/5 flex flex-col mb-4 pl-4">
+                                <span className="font-bold text-sm text-black">{summary}</span>
+                                <ul className="flex flex-row" style={{ paddingBottom: 2 }}>
+                                    {abilities.map((a) => (
+                                        <li key={`ability-list-item-${dexId}-${a.slot}`} className="relative mr-1">
                                         <span
                                             className={`text-xs text-black ${a.isHidden ? "font-bold" : ""}`}
                                             onMouseEnter={() => onHoverAbility(a, true)}
                                             onMouseOut={() => onHoverAbility(a, false)}>{a.name}</span>
-                                        {a.isVisibleTooltip && (
-                                            <span className="absolute z-10 whitespace-nowrap px-3 py-2 text-xs font-medium text-white bg-gray-800 rounded-sm shadow-xs">
+                                            {a.isVisibleTooltip && (
+                                                <span className="absolute z-10 whitespace-nowrap px-3 py-2 text-xs font-medium text-white bg-gray-800 rounded-sm shadow-xs">
                                                 {a.summary}
                                             </span>
-                                        )}
-                                    </li>
-                                ))}
-                            </ul>
-                            <span className="text-xs text-black">{description}</span>
+                                            )}
+                                        </li>
+                                    ))}
+                                </ul>
+                                <span className="text-xs text-black">{description}</span>
+                            </div>
                         </div>
-                    </div>
-                </Card>
+                    </Card>
+                    <Card classes="w-1/3">
+                        <ItemSets data={itemApis} />
+                    </Card>
+                </div>
                 <div className="flex grow">
                     <Card classes="w-2/5" style={{ marginRight: 36 }}>
                         <GenerationTabs

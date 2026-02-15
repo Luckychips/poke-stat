@@ -2,7 +2,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ChartOptionProps } from "@/type/data/visualization";
 
-
 interface Props {
     options: ChartOptionProps;
 }
