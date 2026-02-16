@@ -9,6 +9,12 @@ export interface PokeDex extends Expander  {
     url: string;
 }
 
+export interface PokeDexSkill extends Expander {
+    id: number;
+    name: string;
+    url: string;
+}
+
 export interface PokeAbility extends Expander {
     isHidden: boolean;
     name: string;
