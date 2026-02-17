@@ -1,7 +1,7 @@
 'use client'
 import { MouseEvent, useEffect, useState } from "react";
 import { ImageLoader } from "@/component";
-import type { PokeItemSet } from "@/type/data/pokedex";
+import type { PokeDexItemSet } from "@/type/data/pokedex";
 
 type ItemApi = {
     name: string;
@@ -13,9 +13,9 @@ interface Props {
 }
 
 export default function ItemSets({ data }: Props) {
-    const [translatedItemSets, setTranslatedItemSets] = useState<PokeItemSet[]>([]);
+    const [translatedItemSets, setTranslatedItemSets] = useState<PokeDexItemSet[]>([]);
 
-    const onHoverItemSet = (e: MouseEvent<HTMLLIElement>, target: PokeItemSet, isHover: boolean) => {
+    const onHoverItemSet = (e: MouseEvent<HTMLLIElement>, target: PokeDexItemSet, isHover: boolean) => {
         e.preventDefault();
         setTranslatedItemSets(prev => {
             return prev.map((item) => {
@@ -32,7 +32,7 @@ export default function ItemSets({ data }: Props) {
         (async () => {
             if (data.length) {
                 const fetches = data.map(async (api) => {
-                    const itemSet: PokeItemSet = {
+                    const itemSet: PokeDexItemSet = {
                         name: "",
                         summary: "",
                         thumbnailUrl: "",
@@ -64,7 +64,7 @@ export default function ItemSets({ data }: Props) {
 
                 const settled = await Promise.allSettled(fetches);
                 setTranslatedItemSets(settled
-                    .filter((r): r is PromiseFulfilledResult<PokeItemSet> => r.status === "fulfilled")
+                    .filter((r): r is PromiseFulfilledResult<PokeDexItemSet> => r.status === "fulfilled")
                     .map(r => r.value));
             }
         })();

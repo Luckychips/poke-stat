@@ -1,16 +1,16 @@
 'use client'
 import { useEffect, useState } from "react";
 import { getTypeTagColor, getDamageTagColor } from "@/core/value";
-import type { PokeSkillSet } from "@/type/data/pokedex";
+import type { PokeDexSkillSet } from "@/type/data/pokedex";
 
 interface Props {
-    skillSets: PokeSkillSet[];
+    skillSets: PokeDexSkillSet[];
 }
 
 export default function SkillSets({ skillSets } : Props) {
-    const [translatedSkillSets, setTranslatedSkillSets] = useState<PokeSkillSet[]>([]);
+    const [translatedSkillSets, setTranslatedSkillSets] = useState<PokeDexSkillSet[]>([]);
 
-    const onHoverSkillSet = (target: PokeSkillSet, isHover: boolean) => {
+    const onHoverSkillSet = (target: PokeDexSkillSet, isHover: boolean) => {
         setTranslatedSkillSets(prev => {
             return prev.map((item) => {
                 const isMatchedSkill = target.name === item.name &&
@@ -56,7 +56,7 @@ export default function SkillSets({ skillSets } : Props) {
 
                 const settled = await Promise.allSettled(fetches);
                 setTranslatedSkillSets(settled
-                    .filter((r): r is PromiseFulfilledResult<PokeSkillSet> => r.status === "fulfilled")
+                    .filter((r): r is PromiseFulfilledResult<PokeDexSkillSet> => r.status === "fulfilled")
                     .map(r => r.value));
             }
         })();

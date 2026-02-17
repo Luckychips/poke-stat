@@ -2,6 +2,7 @@ interface Expander {
     isVisibleTooltip: boolean;
 }
 
+//dex
 export interface PokeDex extends Expander  {
     id: number;
     name: string;
@@ -9,13 +10,7 @@ export interface PokeDex extends Expander  {
     url: string;
 }
 
-export interface PokeDexSkill extends Expander {
-    id: number;
-    name: string;
-    url: string;
-}
-
-export interface PokeAbility extends Expander {
+export interface PokeDexAbility extends Expander {
     isHidden: boolean;
     name: string;
     summary: string;
@@ -23,7 +18,7 @@ export interface PokeAbility extends Expander {
     apiUrl: string;
 }
 
-export interface PokeSkillSet extends Expander {
+export interface PokeDexSkillSet extends Expander {
     levelLearnedAt: number;
     name: string;
     summary: string;
@@ -33,9 +28,16 @@ export interface PokeSkillSet extends Expander {
     url: string;
 }
 
-export interface PokeItemSet extends Expander {
+export interface PokeDexItemSet extends Expander {
     name: string;
     summary: string;
     thumbnailUrl: string;
     category: string;
+}
+
+//skill
+export interface PokeSkill extends Expander {
+    id: number;
+    name: string;
+    url: string;
 }

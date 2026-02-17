@@ -2,9 +2,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { RadarChart, Heatmap, Card, ImageLoader } from "@/component";
-import {pokemonTypeList, POKEMON_STAT, POKEMON_TYPE} from "@/core/value";
+import { pokemonTypeList, POKEMON_STAT } from "@/core/value";
 import type { ChartOptionProps } from "@/type/data/visualization";
-import type { PokeAbility, PokeSkillSet } from "@/type/data/pokedex";
+import type { PokeDexAbility, PokeDexSkillSet } from "@/type/data/pokedex";
 import ContentHeader from "../ContentHeader";
 import GenerationTabs from "../GenerationTabs";
 import SkillSets from "../SkillSets";
@@ -54,10 +54,10 @@ export default function Content() {
     const [name, setName] = useState("");
     const [types, setTypes] = useState<string[]>([]);
     const [currentType, setCurrentType] = useState("");
-    const [noProcessAbilities, setNoProcessAbilities] = useState<PokeAbility[]>([]);
-    const [abilities, setAbilities] = useState<PokeAbility[]>([]);
+    const [noProcessAbilities, setNoProcessAbilities] = useState<PokeDexAbility[]>([]);
+    const [abilities, setAbilities] = useState<PokeDexAbility[]>([]);
     const [noProcessSkills, setNoProcessSkills] = useState<any[]>([]);
-    const [skillSets, setSkillSets] = useState<PokeSkillSet[]>([]);
+    const [skillSets, setSkillSets] = useState<PokeDexSkillSet[]>([]);
     const [itemApis, setItemApis] = useState<{ name: string; url: string }[]>([]);
     const [summary, setSummary] = useState("");
     const [description, setDescription] = useState("");
@@ -68,7 +68,7 @@ export default function Content() {
     const params = useParams<{ id: string }>();
     const id = params.id;
 
-    const onHoverAbility = (target: PokeAbility, isHover: boolean) => {
+    const onHoverAbility = (target: PokeDexAbility, isHover: boolean) => {
         setAbilities(prev => {
             return prev.map((item) => {
                 return target.slot === item.slot ? {
@@ -151,7 +151,7 @@ export default function Content() {
         return targetVersions;
     }
 
-    const getLevelUpSkills = (skills: any): PokeSkillSet[] => {
+    const getLevelUpSkills = (skills: any): PokeDexSkillSet[] => {
         /*
         1. red-blue, yellow
         2. gold-silver, crystal
@@ -205,11 +205,11 @@ export default function Content() {
             }
 
             return newSkill;
-        }).filter((skill: PokeSkillSet) => {
+        }).filter((skill: PokeDexSkillSet) => {
             return skill.levelLearnedAt !== 0;
         });
 
-        return list.sort((a: PokeSkillSet, b: PokeSkillSet) => {
+        return list.sort((a: PokeDexSkillSet, b: PokeDexSkillSet) => {
             return a.levelLearnedAt - b.levelLearnedAt;
         });
     }
@@ -225,9 +225,9 @@ export default function Content() {
                 setItemApis(d.held_items.map((o: any) => {
                     return o.item;
                 }));
-                const list: PokeAbility[] = [];
+                const list: PokeDexAbility[] = [];
                 d.abilities.map((a: any) => {
-                    const o: PokeAbility = {
+                    const o: PokeDexAbility = {
                         isVisibleTooltip: false,
                         isHidden: a.is_hidden,
                         name: "",
@@ -458,7 +458,7 @@ export default function Content() {
 
                 const settled = await Promise.allSettled(fetches);
                 setAbilities(settled
-                    .filter((r): r is PromiseFulfilledResult<PokeAbility> => r.status === "fulfilled")
+                    .filter((r): r is PromiseFulfilledResult<PokeDexAbility> => r.status === "fulfilled")
                     .map(r => r.value));
             }
         })();

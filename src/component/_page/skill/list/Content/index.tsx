@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useListPageStore } from "@/store/core";
-import type { PokeDexSkill } from "@/type/data/pokedex";
+import type { PokeSkill } from "@/type/data/pokedex";
 import { Pagination } from "@/component";
 
 const limit = 20;
@@ -10,7 +10,7 @@ const limit = 20;
 export default function Content() {
     const router = useRouter();
     const { currentPage, setCurrentPage } = useListPageStore();
-    const [list, setList] = useState<PokeDexSkill[]>([]);
+    const [list, setList] = useState<PokeSkill[]>([]);
     const [itemTotalCount, setItemTotalCount] = useState(0);
     useEffect(() => {
         setCurrentPage(1);
@@ -47,7 +47,7 @@ export default function Content() {
                                         <span className="text-black text-center pr-4" style={{ minWidth: 32 }}>{item.id}</span>
                                         <span
                                             className="text-black pl-4 cursor-pointer"
-                                            onClick={() => router.push(`/pokedex/${item.id}`)}>
+                                            onClick={() => router.push(`/skill/${item.id}`)}>
                                     {item.name}
                                 </span>
                                     </li>
