@@ -41,3 +41,21 @@ export interface PokeSkill extends Expander {
     name: string;
     url: string;
 }
+
+export interface PokeSkillSet extends Expander {
+    id: number;
+    name: string;
+    summary: string;
+    power: number;
+    accuracy: number;
+    criticalRatio: number;
+    pp: number;
+    targetPokemon: string;
+    skillType: string;
+    skillCategory: string;
+}
+
+export interface PokeLearned {
+    name: string;
+    url: string;
+}
