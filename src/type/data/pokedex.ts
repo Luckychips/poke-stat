@@ -42,7 +42,7 @@ export interface PokeSkill extends Expander {
     url: string;
 }
 
-export interface PokeSkillSet extends Expander {
+export interface PokeSkillSet {
     id: number;
     name: string;
     summary: string;

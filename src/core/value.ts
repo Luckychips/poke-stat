@@ -227,3 +227,16 @@ export const getDamageTagColor = (type: string) => {
 
     return color;
 };
+
+export const getTypes = (d: any) => {
+    const array: string[] = [];
+    if (Array.isArray(d.types)) {
+        d.types.map((t: any) => {
+            array.push(t.type.name);
+        });
+    } else {
+        array.push(d.type.name);
+    }
+
+    return array;
+}

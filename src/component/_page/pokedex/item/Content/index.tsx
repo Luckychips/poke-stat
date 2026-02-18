@@ -1,11 +1,10 @@
 'use client'
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { RadarChart, Heatmap, Card, ImageLoader } from "@/component";
-import { pokemonTypeList, POKEMON_STAT } from "@/core/value";
+import { ContentHeader, Card, ImageLoader, RadarChart, Heatmap } from "@/component";
+import { getTypes, pokemonTypeList, POKEMON_STAT } from "@/core/value";
 import type { ChartOptionProps } from "@/type/data/visualization";
 import type { PokeDexAbility, PokeDexSkillSet } from "@/type/data/pokedex";
-import ContentHeader from "../ContentHeader";
 import GenerationTabs from "../GenerationTabs";
 import SkillSets from "../SkillSets";
 import ItemSets from "../ItemSets";
@@ -66,7 +65,7 @@ export default function Content() {
     const [radarChartOptions, setRadarChartOptions] = useState<ChartOptionProps | null>(null);
     const [heatmapOptions, setHeatmapOptions] = useState<ChartOptionProps | null>(null);
     const params = useParams<{ id: string }>();
-    const id = params.id;
+    const apiTargetId = params.id;
 
     const onHoverAbility = (target: PokeDexAbility, isHover: boolean) => {
         setAbilities(prev => {
@@ -77,15 +76,6 @@ export default function Content() {
                 } : item;
             });
         });
-    }
-
-    const getTypes = (d: any) => {
-        const array: string[] = [];
-        d.types.map((t: any) => {
-            array.push(t.type.name);
-        });
-
-        return array;
     }
 
     const getStats = (d: any) => {
@@ -216,11 +206,11 @@ export default function Content() {
 
     useEffect(() => {
         (async () => {
-            const r = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+            const r = await fetch(`https://pokeapi.co/api/v2/pokemon/${apiTargetId}`);
             if (r.status === 200) {
                 const d = await r.json();
                 const retrieveTypes = getTypes(d);
-                setDexId(parseInt(id));
+                setDexId(parseInt(apiTargetId));
                 setTypes(retrieveTypes);
                 setItemApis(d.held_items.map((o: any) => {
                     return o.item;
@@ -397,7 +387,7 @@ export default function Content() {
 
     useEffect(() => {
         (async () => {
-            const r = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
+            const r = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${apiTargetId}`);
             if (r.status === 200) {
                 const d = await r.json();
                 for (let i = 0; i < d.names.length; i++) {
@@ -504,7 +494,7 @@ export default function Content() {
         <section style={{ margin: 36, height: 'calc(100vh - 72px)' }}>
             <div className="flex flex-col h-full">
                 <ContentHeader
-                    dexId={dexId}
+                    id={dexId}
                     name={name}
                     types={types}
                     currentType={currentType}
