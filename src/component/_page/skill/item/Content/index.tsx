@@ -23,11 +23,12 @@ export default function Content() {
                     accuracy: 0,
                     criticalRatio: 0,
                     pp: 0,
+                    priority: 0,
                     targetPokemon: "",
                     skillType: "",
                     skillCategory: "",
                 };
-                newData.id = parseInt(apiTargetId);
+
                 const d = await r.json();
                 for (let i = 0; i < d.names.length; i++) {
                     if (d.names[i].language.name === "ko") {
@@ -43,11 +44,13 @@ export default function Content() {
                     }
                 }
 
+                newData.id = parseInt(apiTargetId);
                 newData.power = d.power;
                 newData.accuracy = d.accuracy;
                 newData.criticalRatio = d.meta.crit_rate;
                 newData.pp = d.pp;
                 newData.targetPokemon = d.target.name;
+                newData.priority = d.priority;
 
                 const retrieveTypes = getTypes(d);
                 if (retrieveTypes.length) {
@@ -72,28 +75,64 @@ export default function Content() {
                             currentType={currentType}
                             setCurrentType={(v: string) => setCurrentType(v)}
                         />
-                        <div className="flex grow" style={{ marginBottom: 36 }}>
-                            <Card classes="w-2/3" style={{ marginRight: 36 }}>
+                        <div className="flex">
+                            <Card classes="w-full" style={{ marginBottom: 36 }}>
                                 <div className="flex flex-row">
-                                    <div className="max-w-3/5 flex flex-col mb-4">
+                                    <div className="flex flex-col mb-4">
                                         <span className="font-bold text-sm text-black">{skillSet.summary}</span>
-                                        <ul className="flex flex-row" style={{ paddingBottom: 2 }}>
-                                            <li className="relative mr-1">
-                                                <span className="text-xs text-black">파워 : {skillSet.power}</span>
-                                            </li>
-                                            <li className="relative mr-1">
-                                                <span className="text-xs text-black">정확도 : {skillSet.accuracy}</span>
-                                            </li>
-                                            <li className="relative mr-1">
-                                                <span className="text-xs text-black">크리티컬 확률 : {skillSet.criticalRatio}</span>
-                                            </li>
-                                            <li className="relative mr-1">
-                                                <span className="text-xs text-black">PP : {skillSet.pp}</span>
-                                            </li>
-                                        </ul>
                                         {/*<span className="text-xs text-black">{description}</span>*/}
                                     </div>
                                 </div>
+                            </Card>
+                        </div>
+                        <div className="flex">
+                            <ul className="w-full flex flex-row" style={{ paddingBottom: 2, marginBottom: 36 }}>
+                                <li className="w-1/5 relative mr-1" style={{ marginRight: 36 }}>
+                                    <Card>
+                                        <span className="text-xs text-black">위력 : {skillSet.power}</span>
+                                    </Card>
+                                </li>
+                                <li className="w-1/5 relative mr-1" style={{ marginRight: 36 }}>
+                                    <Card>
+                                        <span className="text-xs text-black">명중률 : {skillSet.accuracy ? skillSet.accuracy : "-"}</span>
+                                    </Card>
+                                </li>
+                                <li className="w-1/5 relative mr-1" style={{ marginRight: 36 }}>
+                                    <Card>
+                                        <span className="text-xs text-black">크리티컬 확률 : {skillSet.criticalRatio}</span>
+                                    </Card>
+                                </li>
+                                <li className="w-1/5 relative mr-1" style={{ marginRight: 36 }}>
+                                    <Card>
+                                        <span className="text-xs text-black">PP : {skillSet.pp} (최대 : {skillSet.pp + (skillSet.pp * 0.6)})</span>
+                                    </Card>
+                                </li>
+                                <li className="w-1/5 relative mr-1" style={{ marginRight: 36 }}>
+                                    <Card>
+                                        <span className="text-xs text-black">우선도 : {skillSet.priority}</span>
+                                    </Card>
+                                </li>
+                            </ul>
+                        </div>
+                        <div className="flex grow">
+                            <Card>
+                                <ul className="flex flex-row" style={{ paddingBottom: 2 }}>
+                                    <li className="relative mr-1">
+                                        <span className="text-xs text-black">위력 : {skillSet.power}</span>
+                                    </li>
+                                    <li className="relative mr-1">
+                                        <span className="text-xs text-black">명중률 : {skillSet.accuracy ? skillSet.accuracy : "-"}</span>
+                                    </li>
+                                    <li className="relative mr-1">
+                                        <span className="text-xs text-black">크리티컬 확률 : {skillSet.criticalRatio}</span>
+                                    </li>
+                                    <li className="relative mr-1">
+                                        <span className="text-xs text-black">PP : {skillSet.pp}</span>
+                                    </li>
+                                    <li className="relative mr-1">
+                                        <span className="text-xs text-black">우선도 : {skillSet.priority}</span>
+                                    </li>
+                                </ul>
                             </Card>
                         </div>
                     </>

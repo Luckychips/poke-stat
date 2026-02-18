@@ -50,6 +50,7 @@ export interface PokeSkillSet {
     accuracy: number;
     criticalRatio: number;
     pp: number;
+    priority: number;
     targetPokemon: string;
     skillType: string;
     skillCategory: string;
