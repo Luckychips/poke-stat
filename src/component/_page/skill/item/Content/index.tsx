@@ -1,15 +1,17 @@
 'use client'
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import {getTypes, getTypeTagColor} from "@/core/value";
+import { getTypes, getTypeTagColor } from "@/core/value";
 import { Card, ContentHeader } from "@/component";
 import type { PokeSkillSet } from "@/type/data/pokedex";
+import LearnedDex from "../LearnedDex";
 
 export default function Content() {
     const [skillSet, setSkillSet] = useState<PokeSkillSet | null>(null);
     const [jpSkillName, setJpSkillName] = useState("");
     const [enSkillName, setEnSkillName] = useState("");
     const [currentType, setCurrentType] = useState("");
+    const [pokemonApiUrls, setPokemonApiUrls] = useState<string[]>([]);
     const params = useParams<{ id: string }>();
     const apiTargetId = params.id;
 
@@ -76,6 +78,9 @@ export default function Content() {
                 newData.damageCategory = d.damage_class.name;
                 setCurrentType(newData.skillType);
                 setSkillSet(newData);
+                setPokemonApiUrls(d.learned_by_pokemon.map((learned: any) => {
+                    return learned.url;
+                }));
             }
         })();
     }, []);
@@ -151,24 +156,8 @@ export default function Content() {
                             </li>
                         </ul>
                         <div className="flex grow">
-                            <Card>
-                                <ul className="flex flex-row" style={{ paddingBottom: 2 }}>
-                                    <li className="relative mr-1">
-                                        <span className="text-xs text-black">위력 : {skillSet.power}</span>
-                                    </li>
-                                    <li className="relative mr-1">
-                                        <span className="text-xs text-black">명중률 : {skillSet.accuracy ? skillSet.accuracy : "-"}</span>
-                                    </li>
-                                    <li className="relative mr-1">
-                                        <span className="text-xs text-black">크리티컬 확률 : {skillSet.criticalRatio}</span>
-                                    </li>
-                                    <li className="relative mr-1">
-                                        <span className="text-xs text-black">PP : {skillSet.pp}</span>
-                                    </li>
-                                    <li className="relative mr-1">
-                                        <span className="text-xs text-black">우선도 : {skillSet.priority}</span>
-                                    </li>
-                                </ul>
+                            <Card classes="w-3/5" style={{ marginRight: 36 }}>
+                                <LearnedDex apiUrls={pokemonApiUrls} />
                             </Card>
                         </div>
                     </>
