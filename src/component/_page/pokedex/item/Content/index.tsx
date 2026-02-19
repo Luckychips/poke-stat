@@ -1,11 +1,10 @@
 'use client'
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { ContentHeader, Card, ImageLoader, RadarChart, Heatmap } from "@/component";
-import { getTypes, pokemonTypeList, POKEMON_STAT } from "@/core/value";
+import { ContentHeader, Card, ImageLoader, RadarChart, Heatmap, GenerationTabs } from "@/component";
+import { getTypes, getTargetVersions, pokemonTypeList, POKEMON_STAT } from "@/core/value";
 import type { ChartOptionProps } from "@/type/data/visualization";
 import type { PokeDexAbility, PokeDexSkillSet } from "@/type/data/pokedex";
-import GenerationTabs from "../GenerationTabs";
 import SkillSets from "../SkillSets";
 import ItemSets from "../ItemSets";
 
@@ -106,41 +105,6 @@ export default function Content() {
         return array;
     }
 
-    const getTargetVersions = () => {
-        let targetVersions: string[] = [];
-        switch (selectedGeneration) {
-            case 1:
-                targetVersions = ["red-blue"];
-                break;
-            case 2:
-                targetVersions = ["gold-silver"];
-                break;
-            case 3:
-                targetVersions = ["ruby-sapphire"];
-                break;
-            case 4:
-                targetVersions = ["diamond-pearl"];
-                break;
-            case 5:
-                targetVersions = ["black-white"];
-                break;
-            case 6:
-                targetVersions = ["x-y"];
-                break;
-            case 7:
-                targetVersions = ["sun-moon"];
-                break;
-            case 8:
-                targetVersions = ["sword-shield"];
-                break;
-            case 9:
-                targetVersions = ["scarlet-violet"];
-                break;
-        }
-
-        return targetVersions;
-    }
-
     const getLevelUpSkills = (skills: any): PokeDexSkillSet[] => {
         /*
         1. red-blue, yellow
@@ -163,7 +127,7 @@ export default function Content() {
                 }
 
                 const versionName = detail.version_group.name.toLowerCase();
-                if (getTargetVersions().includes(versionName)) {
+                if (getTargetVersions(selectedGeneration).includes(versionName)) {
                     hasVersion = true;
                 }
             }
@@ -174,7 +138,7 @@ export default function Content() {
             for (let i = 0; i < skill.version_group_details.length; i++) {
                 const detail = skill.version_group_details[i];
                 const versionName = detail.version_group.name.toLowerCase();
-                if (detail.level_learned_at !== 0 && getTargetVersions().includes(versionName)) {
+                if (detail.level_learned_at !== 0 && getTargetVersions(selectedGeneration).includes(versionName)) {
                     targetSkill = detail;
                 }
             }

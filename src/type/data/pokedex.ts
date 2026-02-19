@@ -57,7 +57,9 @@ export interface PokeSkillSet {
     damageCategory: string;
 }
 
-export interface PokeLearned {
+export interface PokeSkillMachine {
+    id: number;
     name: string;
-    url: string;
+    skillName: string;
+    versionGroup: string;
 }

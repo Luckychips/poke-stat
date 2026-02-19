@@ -6,6 +6,7 @@ export { default as BaseIcon } from "./widget/BaseIcon";
 export { default as ImageLoader } from "./widget/ImageLoader";
 export { default as Card } from "./widget/Card";
 export { default as ContentHeader } from "./widget/ContentHeader";
+export { default as GenerationTabs } from "./widget/GenerationTabs";
 
 export { default as Heatmap } from "./visualization/Heatmap";
 export { default as RadarChart } from "./visualization/RadarChart";

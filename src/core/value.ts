@@ -240,3 +240,38 @@ export const getTypes = (d: any) => {
 
     return array;
 }
+
+export const getTargetVersions = (selectedGeneration: number) => {
+    let targetVersions: string[] = [];
+    switch (selectedGeneration) {
+        case 1:
+            targetVersions = ["red-blue"];
+            break;
+        case 2:
+            targetVersions = ["gold-silver"];
+            break;
+        case 3:
+            targetVersions = ["ruby-sapphire"];
+            break;
+        case 4:
+            targetVersions = ["diamond-pearl"];
+            break;
+        case 5:
+            targetVersions = ["black-white"];
+            break;
+        case 6:
+            targetVersions = ["x-y"];
+            break;
+        case 7:
+            targetVersions = ["sun-moon"];
+            break;
+        case 8:
+            targetVersions = ["sword-shield"];
+            break;
+        case 9:
+            targetVersions = ["scarlet-violet"];
+            break;
+    }
+
+    return targetVersions;
+}

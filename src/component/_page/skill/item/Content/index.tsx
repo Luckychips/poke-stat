@@ -1,9 +1,9 @@
 'use client'
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { getTypes, getTypeTagColor } from "@/core/value";
-import { Card, ContentHeader } from "@/component";
-import type { PokeSkillSet } from "@/type/data/pokedex";
+import { getTypes, getTypeTagColor, getTargetVersions } from "@/core/value";
+import { Card, ContentHeader, GenerationTabs } from "@/component";
+import type { PokeSkillSet, PokeSkillMachine } from "@/type/data/pokedex";
 import LearnedDex from "../LearnedDex";
 
 export default function Content() {
@@ -12,8 +12,40 @@ export default function Content() {
     const [enSkillName, setEnSkillName] = useState("");
     const [currentType, setCurrentType] = useState("");
     const [pokemonApiUrls, setPokemonApiUrls] = useState<string[]>([]);
+    const [selectedGeneration, setSelectedGeneration] = useState(0);
+    const [noProcessedSkillMachines, setNoProcessedSkillMachines] = useState<any[]>([]);
+    const [skillMachines, setSkillMachines] = useState<PokeSkillMachine[]>([]);
     const params = useParams<{ id: string }>();
     const apiTargetId = params.id;
+
+    useEffect(() => {
+        (async () => {
+            if (selectedGeneration) {
+                setSkillMachines([]);
+                let targetVersionTM = null;
+                for (let i = 0; i < noProcessedSkillMachines.length; i++) {
+                    const TM = noProcessedSkillMachines[i];
+                    if (getTargetVersions(selectedGeneration).includes(TM.version_group.name)) {
+                        targetVersionTM = TM;
+                        break;
+                    }
+                }
+
+                if (targetVersionTM) {
+                    const r = await fetch(targetVersionTM.machine.url);
+                    if (r.status === 200) {
+                        const d = await r.json();
+                        setSkillMachines([{
+                            id: d.id,
+                            name: d.item.name,
+                            skillName: skillSet!.name,
+                            versionGroup: d.version_group.name,
+                        }]);
+                    }
+                }
+            }
+        })();
+    }, [selectedGeneration]);
 
     useEffect(() => {
         (async () => {
@@ -77,6 +109,7 @@ export default function Content() {
                 newData.damageCategory = d.damage_class.name;
                 setCurrentType(newData.skillType);
                 setSkillSet(newData);
+                setNoProcessedSkillMachines(d.machines);
                 setPokemonApiUrls(d.learned_by_pokemon.map((learned: any) => {
                     return learned.url;
                 }));
@@ -155,9 +188,28 @@ export default function Content() {
                             </li>
                         </ul>
                         <div className="flex grow">
-                            <Card classes="w-3/5" style={{ marginRight: 36 }}>
+                            <Card classes="w-2/7" style={{ marginRight: 36 }}>
                                 <p className="font-bold text-sm text-black">Learned By Pokemon</p>
                                 <LearnedDex apiUrls={pokemonApiUrls} />
+                            </Card>
+                            <Card classes="w-5/7">
+                                <GenerationTabs
+                                    selected={selectedGeneration}
+                                    onSelect={(selected: number) => setSelectedGeneration(selected)}
+                                />
+                                {skillMachines.map((machine) => {
+                                    return (
+                                        <div key={`machine-item-${machine.id}`} className="flex pt-4 pl-2">
+                                            <span className="flex items-center justify-center w-[70px] px-2 py-1 mx-1 rounded-sm mr-4"
+                                                  style={{ backgroundColor: getTypeTagColor(currentType) }}>
+                                                <b className="text-white text-xs">{machine.name.toUpperCase()}</b>
+                                            </span>
+                                            <p>
+                                                <span className="text-black text-xs">{machine.skillName}</span>
+                                            </p>
+                                        </div>
+                                    );
+                                })}
                             </Card>
                         </div>
                     </>
