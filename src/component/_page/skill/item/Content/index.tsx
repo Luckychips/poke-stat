@@ -18,7 +18,6 @@ export default function Content() {
     const params = useParams<{ id: string }>();
     const apiTargetId = params.id;
 
-    console.log("check");
     useEffect(() => {
         (async () => {
             if (selectedGeneration) {
