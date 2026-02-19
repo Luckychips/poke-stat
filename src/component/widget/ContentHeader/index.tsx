@@ -1,5 +1,5 @@
 'use client'
-import { getTypeTagColor } from "@/core/value";
+import { getDamageTagColor, getTypeTagColor } from "@/core/value";
 
 interface Props {
     id: number;
@@ -7,9 +7,10 @@ interface Props {
     types: string[];
     currentType: string;
     setCurrentType: (v: string) => void;
+    damageType?: string;
 }
 
-export default function ContentHeader({ id, name, types, currentType, setCurrentType }: Props) {
+export default function ContentHeader({ id, name, types, currentType, setCurrentType, damageType = "" }: Props) {
     return (
         <div className="relative">
             <div className="text-black ">
@@ -26,6 +27,12 @@ export default function ContentHeader({ id, name, types, currentType, setCurrent
                                 <b className="text-white">{type}</b>
                             </li>
                         ))}
+                        <li
+                            key={`id-${id}-type-${damageType}`}
+                            className="px-2 py-1 mx-1 rounded-sm cursor-pointer"
+                            style={{ backgroundColor: getDamageTagColor(damageType) }}>
+                            <b className="text-white">{damageType}</b>
+                        </li>
                     </ul>
                 </h2>
             </div>

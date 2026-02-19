@@ -54,6 +54,7 @@ export interface PokeSkillSet {
     targetPokemon: string;
     skillType: string;
     skillCategory: string;
+    damageCategory: string;
 }
 
 export interface PokeLearned {

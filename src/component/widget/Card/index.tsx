@@ -8,12 +8,12 @@ interface Props {
 }
 
 export default function Card({ children, style, classes }: Props) {
-    const defaults = { backgroundColor: 'white', padding: 18 }
+    const defaults = { overflow: "hidden", backgroundColor: "white", padding: 18 }
 
     return (
         <div
             className={`relative shadow-sm rounded-lg ${classes ? classes : ''}`}
-            style={style ? Object.assign(style, defaults) : defaults}>
+            style={style ? Object.assign(defaults, style) : defaults}>
             {children}
         </div>
     )
