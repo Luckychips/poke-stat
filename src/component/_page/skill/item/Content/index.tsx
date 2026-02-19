@@ -35,7 +35,6 @@ export default function Content() {
                 };
 
                 const d = await r.json();
-                console.log(d);
                 for (let i = 0; i < d.names.length; i++) {
                     const language = d.names[i].language.name;
                     const skillName = d.names[i].name;
@@ -157,6 +156,7 @@ export default function Content() {
                         </ul>
                         <div className="flex grow">
                             <Card classes="w-3/5" style={{ marginRight: 36 }}>
+                                <p className="font-bold text-sm text-black">Learned By Pokemon</p>
                                 <LearnedDex apiUrls={pokemonApiUrls} />
                             </Card>
                         </div>
