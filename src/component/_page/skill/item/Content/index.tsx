@@ -7,6 +7,8 @@ import type { PokeSkillSet } from "@/type/data/pokedex";
 
 export default function Content() {
     const [skillSet, setSkillSet] = useState<PokeSkillSet | null>(null);
+    const [jpSkillName, setJpSkillName] = useState("");
+    const [enSkillName, setEnSkillName] = useState("");
     const [currentType, setCurrentType] = useState("");
     const params = useParams<{ id: string }>();
     const apiTargetId = params.id;
@@ -30,10 +32,22 @@ export default function Content() {
                 };
 
                 const d = await r.json();
+                console.log(d);
                 for (let i = 0; i < d.names.length; i++) {
-                    if (d.names[i].language.name === "ko") {
-                        newData.name = d.names[i].name;
-                        break;
+                    const language = d.names[i].language.name;
+                    const skillName = d.names[i].name;
+                    if (language === "ja") {
+                        setJpSkillName(skillName);
+                        continue;
+                    }
+
+                    if (language === "en") {
+                        setEnSkillName(skillName);
+                        continue;
+                    }
+
+                    if (language === "ko") {
+                        newData.name = skillName;
                     }
                 }
 
@@ -70,7 +84,7 @@ export default function Content() {
                     <>
                         <ContentHeader
                             id={skillSet.id}
-                            name={skillSet.name}
+                            name={`${skillSet.name} [ ${jpSkillName}, ${enSkillName} ]`}
                             types={[skillSet.skillType]}
                             currentType={currentType}
                             setCurrentType={(v: string) => setCurrentType(v)}
