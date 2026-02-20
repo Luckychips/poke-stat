@@ -63,8 +63,8 @@ export default function SkillSets({ skillSets } : Props) {
     }, [skillSets]);
 
     return (
-        <ul className="h-[410px] overflow-y-auto pt-4 pl-2">
-            {translatedSkillSets.map((skill) => (
+        <ul className="h-[410px] overflow-y-auto pt-4 pl-2 pb-4">
+            {translatedSkillSets.map((skill, index) => (
                 <li
                     key={`skill-set-item-${skill.levelLearnedAt}-${skill.name}-${skill.versionGroup}`}
                     className="flex items-center text-black py-1">
@@ -77,13 +77,13 @@ export default function SkillSets({ skillSets } : Props) {
                           style={{ backgroundColor: getDamageTagColor(skill.damageType) }}>
                         <b className="text-white text-xs">{skill.damageType}</b>
                     </span>
-                    <p>
+                    <p className="relative">
                         <span
                             className="text-xs"
                             onMouseEnter={() => onHoverSkillSet(skill, true)}
                             onMouseOut={() => onHoverSkillSet(skill, false)}>{skill.name}</span>
                         {skill.isVisibleTooltip && (
-                            <span className="absolute z-10 whitespace-nowrap px-3 py-2 text-xs font-medium text-white bg-gray-800 rounded-sm shadow-xs">
+                            <span className={`absolute left-[-50px] ${(index === translatedSkillSets.length - 1) ? "top-[-50px]" : "top-[25px]"} w-[300px] z-10 px-3 py-2 text-xs font-medium text-white bg-gray-800 rounded-sm shadow-xs`}>
                                 {skill.summary}
                             </span>
                         )}
