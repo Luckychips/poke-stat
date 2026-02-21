@@ -3,10 +3,10 @@ interface Expander {
 }
 
 //dex
-export interface PokeDex extends Expander  {
+export interface DexListItem extends Expander  {
     id: number;
     name: string;
-    thumbnailUrl: string;
+    thumbnailUrl?: string;
     url: string;
 }
 

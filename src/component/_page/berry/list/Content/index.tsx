@@ -2,10 +2,10 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useListPageStore } from "@/store/core";
+import { Pagination } from "@/component";
 import type { DexListItem } from "@/type/data/pokedex";
-import { ImageLoader, Pagination } from "@/component";
 
-const limit = 15;
+const limit = 20;
 
 export default function Content() {
     const router = useRouter();
@@ -19,16 +19,16 @@ export default function Content() {
     useEffect(() => {
         (async () => {
             const offset = (currentPage - 1) * limit;
-            const r = await fetch(`https://pokeapi.co/api/v2/pokemon/?limit=${limit}&offset=${offset}`)
+            const r = await fetch(`https://pokeapi.co/api/v2/berry/?limit=${limit}&offset=${offset}`)
             if (r.status === 200) {
                 const d = await r.json();
                 setItemTotalCount(d.count);
                 setList(d.results.map((item: any, index: number) => {
-                    const id = offset + (index + 1);
+                    const parsed = item.url.split("/");
+                    const id = parsed[parsed.length - 2];
                     return {
                         id: id,
                         name: item.name,
-                        thumbnailUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
                         url: item.url,
                     }
                 }));
@@ -46,10 +46,9 @@ export default function Content() {
                                 return (
                                     <li key={`poke-dex-list-${item.id}`} className="flex flex-row items-center p-1">
                                         <span className="text-black text-center pr-4" style={{ minWidth: 32 }}>{item.id}</span>
-                                        <ImageLoader src={item.thumbnailUrl} alt={item.name} />
                                         <span
                                             className="text-black pl-4 cursor-pointer"
-                                            onClick={() => router.push(`/pokedex/${item.id}`)}>
+                                            onClick={() => router.push(`/berry/${item.id}`)}>
                                     {item.name}
                                 </span>
                                     </li>

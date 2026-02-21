@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useListPageStore } from "@/store/core";
 import { ImageLoader, Pagination } from "@/component";
-import type { PokeDex } from "@/type/data/pokedex";
+import type { DexListItem } from "@/type/data/pokedex";
 
 interface Props {
     apiUrls: string[];
@@ -14,7 +14,7 @@ const limit = 8;
 export default function LearnedDex({ apiUrls }: Props) {
     const router = useRouter();
     const { currentPage, setCurrentPage } = useListPageStore();
-    const [list, setList] = useState<PokeDex[]>([]);
+    const [list, setList] = useState<DexListItem[]>([]);
 
     useEffect(() => {
         if (apiUrls.length) {
@@ -28,7 +28,7 @@ export default function LearnedDex({ apiUrls }: Props) {
             const to = ((currentPage - 1) * limit) + limit;
             const sliced = apiUrls.slice(from, to);
             const fetches = sliced.map(async (url) => {
-                const dex: PokeDex = {
+                const dex: DexListItem = {
                     id: 0,
                     name: "",
                     thumbnailUrl: "",
@@ -49,7 +49,7 @@ export default function LearnedDex({ apiUrls }: Props) {
 
             const settled = await Promise.allSettled(fetches);
             setList(settled
-                .filter((r): r is PromiseFulfilledResult<PokeDex> => r.status === "fulfilled")
+                .filter((r): r is PromiseFulfilledResult<DexListItem> => r.status === "fulfilled")
                 .map(r => r.value));
         })();
     }, [currentPage]);
