@@ -46,7 +46,7 @@ export default function Content() {
                                 return (
                                     <li key={`poke-dex-list-${item.id}`} className="flex flex-row items-center p-1">
                                         <span className="text-black text-center pr-4" style={{ minWidth: 32 }}>{item.id}</span>
-                                        <ImageLoader src={item.thumbnailUrl} alt={item.name} />
+                                        {item.thumbnailUrl && <ImageLoader src={item.thumbnailUrl} alt={item.name} />}
                                         <span
                                             className="text-black pl-4 cursor-pointer"
                                             onClick={() => router.push(`/pokedex/${item.id}`)}>

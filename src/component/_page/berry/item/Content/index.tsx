@@ -6,6 +6,7 @@ import { Card, ContentHeader } from "@/component";
 
 export default function Content() {
     const [name, setName] = useState("");
+    const [thumbnailUrl, setThumbnailUrl] = useState("");
     const [summary, setSummary] = useState("");
     const params = useParams<{ id: string }>();
     const apiTargetId = params.id;
@@ -18,6 +19,7 @@ export default function Content() {
                 const itemFetcher = await fetch(berryData.item.url);
                 if (itemFetcher.status === 200) {
                     const itemData = await itemFetcher.json();
+                    setThumbnailUrl(itemData.sprites.default);
                     for (let i = 0; i < itemData.names.length; i++) {
                         if (itemData.names[i].language.name === "ko") {
                             setName(itemData.names[i].name);
@@ -42,6 +44,7 @@ export default function Content() {
                 <ContentHeader
                     id={parseInt(apiTargetId)}
                     name={name}
+                    thumbnail={thumbnailUrl}
                     types={[]}
                 />
                 <div className="flex">

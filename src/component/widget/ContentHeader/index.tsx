@@ -1,8 +1,11 @@
 'use client'
 import { getDamageTagColor, getTypeTagColor } from "@/core/value";
+import { ImageLoader } from "@/component";
+import React from "react";
 
 interface Props {
     id: number;
+    thumbnail?: string;
     name: string;
     types: string[];
     currentType?: string;
@@ -10,12 +13,13 @@ interface Props {
     damageType?: string;
 }
 
-export default function ContentHeader({ id, name, types, currentType, setCurrentType, damageType = "" }: Props) {
+export default function ContentHeader({ id, thumbnail, name, types, currentType, setCurrentType, damageType = "" }: Props) {
     return (
         <div className="relative">
             <div className="text-black ">
                 <h1 className="font-bold pb-1">{id} Report</h1>
                 <h2 className="flex items-center text-xs" style={{ marginBottom: 27 }}>
+                    {thumbnail && <ImageLoader src={thumbnail} alt={name} width={30} height={30} />}
                     <span className="pr-2">{name}</span>
                     <ul className="flex">
                         {types.map((type) => (
