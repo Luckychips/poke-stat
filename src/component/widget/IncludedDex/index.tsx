@@ -7,11 +7,10 @@ import type { DexListItem } from "@/type/data/pokedex";
 
 interface Props {
     apiUrls: string[];
+    pageLimit: number;
 }
 
-const limit = 8;
-
-export default function LearnedDex({ apiUrls }: Props) {
+export default function IncludedDex({ apiUrls, pageLimit = 8 }: Props) {
     const router = useRouter();
     const { currentPage, setCurrentPage } = useListPageStore();
     const [list, setList] = useState<DexListItem[]>([]);
@@ -24,8 +23,8 @@ export default function LearnedDex({ apiUrls }: Props) {
 
     useEffect(() => {
         (async () => {
-            const from = (currentPage - 1) * limit;
-            const to = ((currentPage - 1) * limit) + limit;
+            const from = (currentPage - 1) * pageLimit;
+            const to = ((currentPage - 1) * pageLimit) + pageLimit;
             const sliced = apiUrls.slice(from, to);
             const fetches = sliced.map(async (url) => {
                 const dex: DexListItem = {
@@ -62,7 +61,7 @@ export default function LearnedDex({ apiUrls }: Props) {
                         return (
                             <li key={`poke-dex-list-${item.id}`} className="flex flex-row items-center p-1">
                                 <span className="min-w-[45px] text-black text-center pr-4">{item.id}</span>
-                                <ImageLoader src={item.thumbnailUrl} alt={item.name} />
+                                {item.thumbnailUrl && <ImageLoader src={item.thumbnailUrl} alt={item.name} />}
                                 <span
                                     className="text-black pl-4 cursor-pointer"
                                     onClick={() => router.push(`/pokedex/${item.id}`)}>
@@ -72,7 +71,7 @@ export default function LearnedDex({ apiUrls }: Props) {
                         );
                     })}
                 </ul>
-                <Pagination itemTotalCount={apiUrls.length} pageLimit={limit} />
+                <Pagination itemTotalCount={apiUrls.length} pageLimit={pageLimit} />
             </article>
         </div>
     );

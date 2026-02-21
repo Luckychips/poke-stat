@@ -1,13 +1,15 @@
 'use client'
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { getTypes, getTypeTagColor, getTargetVersions } from "@/core/value";
-import { Card, ContentHeader } from "@/component";
+import { useListPageStore } from "@/store/core";
+import { Card, ContentHeader, IncludedDex } from "@/component";
 
 export default function Content() {
+    const { setCurrentPage } = useListPageStore();
     const [name, setName] = useState("");
     const [thumbnailUrl, setThumbnailUrl] = useState("");
     const [summary, setSummary] = useState("");
+    const [pokemonApiUrls, setPokemonApiUrls] = useState<string[]>([]);
     const params = useParams<{ id: string }>();
     const apiTargetId = params.id;
 
@@ -19,7 +21,11 @@ export default function Content() {
                 const itemFetcher = await fetch(berryData.item.url);
                 if (itemFetcher.status === 200) {
                     const itemData = await itemFetcher.json();
+                    setCurrentPage(0);
                     setThumbnailUrl(itemData.sprites.default);
+                    setPokemonApiUrls(itemData.held_by_pokemon.map((held: any) => {
+                        return held.pokemon.url;
+                    }));
                     for (let i = 0; i < itemData.names.length; i++) {
                         if (itemData.names[i].language.name === "ko") {
                             setName(itemData.names[i].name);
@@ -54,6 +60,12 @@ export default function Content() {
                                 <p className="font-bold text-sm text-black">{summary}</p>
                             </div>
                         </div>
+                    </Card>
+                </div>
+                <div className="flex grow">
+                    <Card classes="w-full" style={{ marginRight: 36 }}>
+                        <p className="font-bold text-sm text-black">Held By Pokemon</p>
+                        <IncludedDex apiUrls={pokemonApiUrls} pageLimit={10} />
                     </Card>
                 </div>
             </div>

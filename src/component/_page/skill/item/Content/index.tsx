@@ -2,9 +2,8 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { getTypes, getTypeTagColor, getTargetVersions } from "@/core/value";
-import { Card, ContentHeader, GenerationTabs } from "@/component";
+import { Card, ContentHeader, GenerationTabs, IncludedDex } from "@/component";
 import type { PokeSkillSet, PokeSkillMachine } from "@/type/data/pokedex";
-import LearnedDex from "../LearnedDex";
 
 export default function Content() {
     const [skillSet, setSkillSet] = useState<PokeSkillSet | null>(null);
@@ -190,7 +189,7 @@ export default function Content() {
                         <div className="flex grow">
                             <Card classes="w-2/7" style={{ marginRight: 36 }}>
                                 <p className="font-bold text-sm text-black">Learned By Pokemon</p>
-                                <LearnedDex apiUrls={pokemonApiUrls} />
+                                <IncludedDex apiUrls={pokemonApiUrls} />
                             </Card>
                             <Card classes="w-5/7">
                                 <GenerationTabs
