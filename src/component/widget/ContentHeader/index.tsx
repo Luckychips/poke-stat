@@ -5,8 +5,8 @@ interface Props {
     id: number;
     name: string;
     types: string[];
-    currentType: string;
-    setCurrentType: (v: string) => void;
+    currentType?: string;
+    setCurrentType?: (v: string) => void;
     damageType?: string;
 }
 
@@ -23,7 +23,7 @@ export default function ContentHeader({ id, name, types, currentType, setCurrent
                                 key={`id-${id}-type-${type}`}
                                 className="px-2 py-1 mx-1 rounded-sm cursor-pointer"
                                 style={{ backgroundColor: getTypeTagColor(type) }}
-                                onClick={() => setCurrentType(type)}>
+                                onClick={() => setCurrentType && setCurrentType(type)}>
                                 <b className="text-white">{type}</b>
                             </li>
                         ))}

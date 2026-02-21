@@ -133,7 +133,7 @@ export default function Content() {
                         <div className="flex">
                             <Card classes="w-full" style={{ marginBottom: 36 }}>
                                 <div className="flex flex-row">
-                                    <div className="flex flex-col mb-4">
+                                    <div className="flex flex-col">
                                         <p className="font-bold text-sm text-black">{skillSet.summary}</p>
                                         <div className="text-xs text-black">{skillSet.skillCategory}</div>
                                     </div>
