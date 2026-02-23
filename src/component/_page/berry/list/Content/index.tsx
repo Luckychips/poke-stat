@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useListPageStore } from "@/store/core";
 import { Pagination } from "@/component";
@@ -12,29 +12,34 @@ export default function Content() {
     const { currentPage, setCurrentPage } = useListPageStore();
     const [list, setList] = useState<DexListItem[]>([]);
     const [itemTotalCount, setItemTotalCount] = useState(0);
+
+    const doFetch = useCallback(async () => {
+        const offset = (currentPage - 1) * limit;
+        const r = await fetch(`https://pokeapi.co/api/v2/berry/?limit=${limit}&offset=${offset}`)
+        if (r.ok) {
+            const d = await r.json();
+            setItemTotalCount(d.count);
+            setList(d.results.map((item: any, index: number) => {
+                const parsed = item.url.split("/");
+                const id = parsed[parsed.length - 2];
+                return {
+                    id: id,
+                    name: item.name,
+                    url: item.url,
+                }
+            }));
+        }
+    }, [currentPage]);
+
     useEffect(() => {
         setCurrentPage(1);
     }, []);
 
     useEffect(() => {
         (async () => {
-            const offset = (currentPage - 1) * limit;
-            const r = await fetch(`https://pokeapi.co/api/v2/berry/?limit=${limit}&offset=${offset}`)
-            if (r.status === 200) {
-                const d = await r.json();
-                setItemTotalCount(d.count);
-                setList(d.results.map((item: any, index: number) => {
-                    const parsed = item.url.split("/");
-                    const id = parsed[parsed.length - 2];
-                    return {
-                        id: id,
-                        name: item.name,
-                        url: item.url,
-                    }
-                }));
-            }
+            await doFetch();
         })();
-    }, [currentPage]);
+    }, [doFetch]);
 
     return (
         <section className="w-19/20 min-w-19/20 h-screen bg-gray-100" style={{ minWidth: 1100 }}>
