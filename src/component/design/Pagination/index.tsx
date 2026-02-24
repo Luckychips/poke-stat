@@ -13,18 +13,26 @@ export default function Pagination({ itemTotalCount, pageLimit }: Props) {
     const [hasPager, setHasPager] = useState(false);
 
     const render = (remain: number) => {
-        if ((currentPage % 5 === remain) && itemTotalCount > 0) {
-            const lastPage = getLastPageIndex();
+        if (itemTotalCount > 0) {
             const numbers = [];
-            for (let i = currentPage; i < currentPage + 5; i++) {
-                if (i >= lastPage) {
-                    break;
+            if (remain === 1) {
+                const lastPage = getLastPageIndex();
+                for (let i = currentPage; i < currentPage + 5; i++) {
+                    numbers.push(i);
+
+                    if (i >= lastPage) {
+                        break;
+                    }
                 }
 
-                numbers.push(i);
-            }
+                setPageNumbers(numbers);
+            } else if (remain === 0) {
+                for (let i = currentPage - 4; i <= currentPage; i++) {
+                    numbers.push(i);
+                }
 
-            setPageNumbers(numbers);
+                setPageNumbers(numbers);
+            }
         }
     };
 
@@ -50,7 +58,7 @@ export default function Pagination({ itemTotalCount, pageLimit }: Props) {
     };
 
     useEffect(() => {
-        render(1);
+        render(currentPage % 5);
         setTimeout(() => {
             setHasPager(true);
         }, 250);

@@ -18,16 +18,18 @@ export default function Content() {
         const r = await fetch(`https://pokeapi.co/api/v2/berry/?limit=${limit}&offset=${offset}`)
         if (r.ok) {
             const d = await r.json();
-            setItemTotalCount(d.count);
-            setList(d.results.map((item: any, index: number) => {
-                const parsed = item.url.split("/");
-                const id = parsed[parsed.length - 2];
-                return {
-                    id: id,
-                    name: item.name,
-                    url: item.url,
-                }
-            }));
+            if (d.results.length) {
+                setItemTotalCount(d.count);
+                setList(d.results.map((item: any) => {
+                    const parsed = item.url.split("/");
+                    const id = parsed[parsed.length - 2];
+                    return {
+                        id: id,
+                        name: item.name,
+                        url: item.url,
+                    }
+                }));
+            }
         }
     }, [currentPage]);
 
