@@ -15,29 +15,25 @@ export default function Content() {
 
     useEffect(() => {
         (async () => {
-            const berryFetcher = await fetch(`https://pokeapi.co/api/v2/berry/${apiTargetId}`);
-            if (berryFetcher.ok) {
-                const berryData = await berryFetcher.json();
-                const itemFetcher = await fetch(berryData.item.url);
-                if (itemFetcher.ok) {
-                    const itemData = await itemFetcher.json();
-                    setCurrentPage(0);
-                    setThumbnailUrl(itemData.sprites.default);
-                    setPokemonApiUrls(itemData.held_by_pokemon.map((held: any) => {
-                        return held.pokemon.url;
-                    }));
-                    for (let i = 0; i < itemData.names.length; i++) {
-                        if (itemData.names[i].language.name === "ko") {
-                            setName(itemData.names[i].name);
-                            break;
-                        }
+            const r = await fetch(`https://pokeapi.co/api/v2/item/${apiTargetId}`);
+            if (r.ok) {
+                const d = await r.json();
+                setCurrentPage(0);
+                setThumbnailUrl(d.sprites.default);
+                setPokemonApiUrls(d.held_by_pokemon.map((held: any) => {
+                    return held.pokemon.url;
+                }));
+                for (let i = 0; i < d.names.length; i++) {
+                    if (d.names[i].language.name === "ko") {
+                        setName(d.names[i].name);
+                        break;
                     }
+                }
 
-                    for (let i = 0; i < itemData.flavor_text_entries.length; i++) {
-                        if (itemData.flavor_text_entries[i].language.name === "ko") {
-                            setSummary(itemData.flavor_text_entries[i].text);
-                            break;
-                        }
+                for (let i = 0; i < d.flavor_text_entries.length; i++) {
+                    if (d.flavor_text_entries[i].language.name === "ko") {
+                        setSummary(d.flavor_text_entries[i].text);
+                        break;
                     }
                 }
             }

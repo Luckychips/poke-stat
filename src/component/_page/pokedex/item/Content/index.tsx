@@ -171,7 +171,7 @@ export default function Content() {
     useEffect(() => {
         (async () => {
             const r = await fetch(`https://pokeapi.co/api/v2/pokemon/${apiTargetId}`);
-            if (r.status === 200) {
+            if (r.ok) {
                 const d = await r.json();
                 const retrieveTypes = getTypes(d);
                 setDexId(parseInt(apiTargetId));
@@ -237,7 +237,7 @@ export default function Content() {
             const fetches = typeIds.map(async (id) => {
                 const ratios = Array.from({ length: 18 }, () => 1);
                 const r = await fetch(`https://pokeapi.co/api/v2/type/${id}`);
-                if (r.status === 200) {
+                if (r.ok) {
                     const d = await r.json();
                     const toDoubleDamages = d.damage_relations.double_damage_to;
                     const toHalfDamages = d.damage_relations.half_damage_to;
@@ -352,7 +352,7 @@ export default function Content() {
     useEffect(() => {
         (async () => {
             const r = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${apiTargetId}`);
-            if (r.status === 200) {
+            if (r.ok) {
                 const d = await r.json();
                 for (let i = 0; i < d.names.length; i++) {
                     if (d.names[i].language.name === "ko") {
@@ -390,7 +390,7 @@ export default function Content() {
             if (noProcessAbilities.length) {
                 const fetches = noProcessAbilities.map(async (ability) => {
                     const r = await fetch(ability.apiUrl);
-                    if (r.status === 200) {
+                    if (r.ok) {
                         const json = await r.json();
                         for (let i = 0; i < json.flavor_text_entries.length; i++) {
                             if (json.flavor_text_entries[i].language.name === "ko") {

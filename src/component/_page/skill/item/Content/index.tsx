@@ -32,7 +32,7 @@ export default function Content() {
 
                 if (targetVersionTM) {
                     const r = await fetch(targetVersionTM.machine.url);
-                    if (r.status === 200) {
+                    if (r.ok) {
                         const d = await r.json();
                         setSkillMachines([{
                             id: d.id,
@@ -49,7 +49,7 @@ export default function Content() {
     useEffect(() => {
         (async () => {
             const r = await fetch(`https://pokeapi.co/api/v2/move/${apiTargetId}`);
-            if (r.status === 200) {
+            if (r.ok) {
                 const newData = {
                     id: 0,
                     name: "",
