@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useListPageStore } from "@/store/core";
 import { ImageLoader, Pagination } from "@/component";
@@ -7,13 +7,43 @@ import type { DexListItem } from "@/type/data/pokedex";
 
 interface Props {
     apiUrls: string[];
-    pageLimit: number;
+    pageLimit?: number;
 }
 
 export default function IncludedDex({ apiUrls, pageLimit = 8 }: Props) {
     const router = useRouter();
     const { currentPage, setCurrentPage } = useListPageStore();
     const [list, setList] = useState<DexListItem[]>([]);
+
+    const doFetch = useCallback(async () => {
+        const from = (currentPage - 1) * pageLimit;
+        const to = ((currentPage - 1) * pageLimit) + pageLimit;
+        const sliced = apiUrls.slice(from, to);
+        const fetches = sliced.map(async (url) => {
+            const dex: DexListItem = {
+                id: 0,
+                name: "",
+                thumbnailUrl: "",
+                url: url,
+                isVisibleTooltip: false,
+            }
+
+            const r = await fetch(url);
+            if (r.status === 200) {
+                const d= await r.json();
+                dex.id = d.id;
+                dex.name = d.name;
+                dex.thumbnailUrl = d.sprites.front_default;
+            }
+
+            return dex;
+        });
+
+        const settled = await Promise.allSettled(fetches);
+        setList(settled
+            .filter((r): r is PromiseFulfilledResult<DexListItem> => r.status === "fulfilled")
+            .map(r => r.value));
+    }, [currentPage]);
 
     useEffect(() => {
         if (apiUrls.length) {
@@ -23,35 +53,9 @@ export default function IncludedDex({ apiUrls, pageLimit = 8 }: Props) {
 
     useEffect(() => {
         (async () => {
-            const from = (currentPage - 1) * pageLimit;
-            const to = ((currentPage - 1) * pageLimit) + pageLimit;
-            const sliced = apiUrls.slice(from, to);
-            const fetches = sliced.map(async (url) => {
-                const dex: DexListItem = {
-                    id: 0,
-                    name: "",
-                    thumbnailUrl: "",
-                    url: url,
-                    isVisibleTooltip: false,
-                }
-
-                const r = await fetch(url);
-                if (r.status === 200) {
-                    const d= await r.json();
-                    dex.id = d.id;
-                    dex.name = d.name;
-                    dex.thumbnailUrl = d.sprites.front_default;
-                }
-
-                return dex;
-            });
-
-            const settled = await Promise.allSettled(fetches);
-            setList(settled
-                .filter((r): r is PromiseFulfilledResult<DexListItem> => r.status === "fulfilled")
-                .map(r => r.value));
+            await doFetch();
         })();
-    }, [currentPage]);
+    }, [doFetch]);
 
     return (
         <div className="relative flex flex-col h-full p-4">
