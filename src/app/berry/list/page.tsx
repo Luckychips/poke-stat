@@ -1,10 +1,9 @@
-import { Layout } from "@/component";
-import Content from "@/component/_page/berry/list/Content";
+import { Layout, ContentList } from "@/component";
 
 export default function Page() {
     return (
         <Layout>
-            <Content />
+            <ContentList prefix="berry" pageLimit={20} />
         </Layout>
     );
 }

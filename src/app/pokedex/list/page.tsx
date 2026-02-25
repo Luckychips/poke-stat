@@ -1,10 +1,9 @@
-import { Layout } from "@/component";
-import Content from "@/component/_page/pokedex/list/Content";
+import { Layout, ContentList } from "@/component";
 
 export default function Page() {
     return (
         <Layout>
-            <Content />
+            <ContentList prefix="pokemon" />
         </Layout>
     );
 }

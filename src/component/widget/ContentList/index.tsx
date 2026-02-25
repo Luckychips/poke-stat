@@ -2,20 +2,23 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useListPageStore } from "@/store/core";
-import { Pagination } from "@/component";
+import { ImageLoader, Pagination } from "@/component";
 import type { DexListItem } from "@/type/data/pokedex";
 
-const limit = 20;
+interface Props {
+    prefix: string;
+    pageLimit?: number;
+}
 
-export default function Content() {
+export default function ContentList({ prefix, pageLimit = 15 }: Props) {
     const router = useRouter();
     const { currentPage, setCurrentPage } = useListPageStore();
     const [list, setList] = useState<DexListItem[]>([]);
     const [itemTotalCount, setItemTotalCount] = useState(0);
 
     const doFetch = useCallback(async () => {
-        const offset = (currentPage - 1) * limit;
-        const r = await fetch(`https://pokeapi.co/api/v2/berry/?limit=${limit}&offset=${offset}`)
+        const offset = (currentPage - 1) * pageLimit;
+        const r = await fetch(`https://pokeapi.co/api/v2/${prefix}/?limit=${pageLimit}&offset=${offset}`)
         if (r.ok) {
             const d = await r.json();
             if (d.results.length) {
@@ -23,11 +26,23 @@ export default function Content() {
                 setList(d.results.map((item: any) => {
                     const parsed = item.url.split("/");
                     const id = parsed[parsed.length - 2];
-                    return {
+                    const newItem = {
                         id: id,
                         name: item.name,
+                        thumbnailUrl: "",
                         url: item.url,
+                    };
+
+                    switch (prefix) {
+                        case "pokemon":
+                            newItem.thumbnailUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+                            break;
+                        case "item":
+                            newItem.thumbnailUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${item.name}.png`;
+                            break;
                     }
+
+                    return newItem;
                 }));
             }
         }
@@ -52,17 +67,26 @@ export default function Content() {
                             {list.map((item, index) => {
                                 return (
                                     <li key={`poke-dex-list-${item.id}`} className="flex flex-row items-center p-1">
-                                        <span className="text-black text-center pr-4" style={{ minWidth: 32 }}>{item.id}</span>
+                                        <span className="text-black text-center pr-4" style={{ minWidth: 70 }}>{item.id}</span>
+                                        {item.thumbnailUrl && <ImageLoader src={item.thumbnailUrl} alt={item.name} />}
                                         <span
                                             className="text-black pl-4 cursor-pointer"
-                                            onClick={() => router.push(`/berry/${item.id}`)}>
+                                            onClick={() => {
+                                                if (prefix === "pokemon") {
+                                                    router.push(`/pokedex/${item.id}`);
+                                                } else if (prefix === "move") {
+                                                    router.push(`/skill/${item.id}`);
+                                                } else {
+                                                    router.push(`/${prefix}/${item.id}`)
+                                                }
+                                            }}>
                                     {item.name}
                                 </span>
                                     </li>
                                 );
                             })}
                         </ul>
-                        <Pagination itemTotalCount={itemTotalCount} pageLimit={limit} />
+                        <Pagination itemTotalCount={itemTotalCount} pageLimit={pageLimit} />
                     </article>
                 </div>
             </article>
