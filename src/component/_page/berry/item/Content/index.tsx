@@ -63,7 +63,7 @@ export default function Content() {
                     </Card>
                 </div>
                 <div className="flex grow">
-                    <Card classes="w-full" style={{ marginRight: 36 }}>
+                    <Card classes="w-full">
                         <p className="font-bold text-sm text-black">Held By Pokemon</p>
                         <IncludedDex apiUrls={pokemonApiUrls} pageLimit={10} />
                     </Card>
