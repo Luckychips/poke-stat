@@ -275,3 +275,42 @@ export const getTargetVersions = (selectedGeneration: number) => {
 
     return targetVersions;
 }
+
+export const baseChartOptions = {
+    series: [
+        {
+            name: "",
+            data: [],
+        }
+    ],
+    chart: {
+        height: 350,
+        animations: {
+            enabled: false,
+        },
+        dropShadow: {
+            enabled: true,
+            blur: 1,
+            left: 1,
+            top: 1
+        }
+    },
+    dataLabels: {
+        enabled: true,
+        background: {
+            enabled: true,
+        }
+    },
+    title: { text: "" },
+    stroke: { width: 1 },
+    fill: { opacity: 0.1 },
+    markers: { size: 0 },
+    yaxis: {
+        tickAmount: 5,
+        min: 0,
+        max: 200,
+    },
+    xaxis: {
+        categories: [],
+    }
+}

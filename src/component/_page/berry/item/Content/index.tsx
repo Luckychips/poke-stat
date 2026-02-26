@@ -2,7 +2,9 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useListPageStore } from "@/store/core";
-import { Card, ContentHeader, IncludedDex } from "@/component";
+import { baseChartOptions } from "@/core/value";
+import { Card, ContentHeader, IncludedDex, RadarChart } from "@/component";
+import type { ChartOptionProps } from "@/type/data/visualization";
 
 export default function Content() {
     const { setCurrentPage } = useListPageStore();
@@ -10,6 +12,7 @@ export default function Content() {
     const [thumbnailUrl, setThumbnailUrl] = useState("");
     const [summary, setSummary] = useState("");
     const [pokemonApiUrls, setPokemonApiUrls] = useState<string[]>([]);
+    const [radarChartOptions, setRadarChartOptions] = useState<ChartOptionProps | null>(null);
     const params = useParams<{ id: string }>();
     const apiTargetId = params.id;
 
@@ -18,6 +21,24 @@ export default function Content() {
             const berryFetcher = await fetch(`https://pokeapi.co/api/v2/berry/${apiTargetId}`);
             if (berryFetcher.ok) {
                 const berryData = await berryFetcher.json();
+                console.log(berryData.flavors)
+                setRadarChartOptions({
+                    ...baseChartOptions,
+                    chart: {
+                        ...baseChartOptions.chart,
+                        type: "radar",
+                    },
+                    xaxis: {
+                        categories: ["spicy", "dry", "sweet", "bitter", "sour"],
+                    },
+                    yaxis: {
+                        tickAmount: 3,
+                        min: 0,
+                        max: 15,
+                    },
+                    series: [{ data: berryData.flavors.map((flavor: any) => flavor.potency) }],
+                });
+
                 const itemFetcher = await fetch(berryData.item.url);
                 if (itemFetcher.ok) {
                     const itemData = await itemFetcher.json();
@@ -63,9 +84,12 @@ export default function Content() {
                     </Card>
                 </div>
                 <div className="flex grow">
-                    <Card classes="w-full">
+                    <Card classes="w-3/5" style={{ marginRight: 36 }}>
                         <p className="font-bold text-sm text-black">Held By Pokemon</p>
                         <IncludedDex apiUrls={pokemonApiUrls} pageLimit={10} />
+                    </Card>
+                    <Card classes="w-2/5">
+                        {radarChartOptions && <RadarChart options={radarChartOptions}/>}
                     </Card>
                 </div>
             </div>

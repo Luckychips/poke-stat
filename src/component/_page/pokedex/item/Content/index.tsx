@@ -2,50 +2,17 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { ContentHeader, Card, ImageLoader, RadarChart, Heatmap, GenerationTabs } from "@/component";
-import { getTypes, getTargetVersions, pokemonTypeList, POKEMON_STAT } from "@/core/value";
+import {
+    getTypes,
+    getTargetVersions,
+    baseChartOptions,
+    pokemonTypeList,
+    POKEMON_STAT,
+} from "@/core/value";
 import type { ChartOptionProps } from "@/type/data/visualization";
 import type { PokeDexAbility, PokeDexSkillSet } from "@/type/data/pokedex";
 import SkillSets from "../SkillSets";
 import ItemSets from "../ItemSets";
-
-const baseOptions = {
-    series: [
-        {
-            name: "",
-            data: [],
-        }
-    ],
-    chart: {
-        height: 350,
-        animations: {
-            enabled: false,
-        },
-        dropShadow: {
-            enabled: true,
-            blur: 1,
-            left: 1,
-            top: 1
-        }
-    },
-    dataLabels: {
-        enabled: true,
-        background: {
-            enabled: true,
-        }
-    },
-    title: { text: "" },
-    stroke: { width: 1 },
-    fill: { opacity: 0.1 },
-    markers: { size: 0 },
-    yaxis: {
-        tickAmount: 5,
-        min: 0,
-        max: 200,
-    },
-    xaxis: {
-        categories: [],
-    }
-};
 
 export default function Content() {
     const [dexId, setDexId] = useState(0);
@@ -207,14 +174,14 @@ export default function Content() {
                     }
                 }
                 setRadarChartOptions({
-                    ...baseOptions,
+                    ...baseChartOptions,
                     chart: {
-                        ...baseOptions.chart,
+                        ...baseChartOptions.chart,
                         type: "radar",
                     },
                     colors: [radarSeriesColor],
                     dataLabels: {
-                        ...baseOptions.dataLabels,
+                        ...baseChartOptions.dataLabels,
                         style: {
                             colors: [radarSeriesColor],
                             fontWeight: 600,
